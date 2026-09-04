@@ -3,12 +3,13 @@
 Assemble the funnel pages: inline the CSS, the co-branded lockup, the review
 wall, and the tracking blocks.
 
-Produces five pages:
+Produces three pages:
   vsl_registration_page.html          pixel base + PageView, no conversion
   vsl_confirmation_qualified.html     pixel base + PageView + Schedule  -> /booked
   vsl_confirmation_unqualified.html   pixel base + PageView, NO conversion -> /confirmed
-  privacy.html                        no analytics
-  terms.html                          no analytics
+
+Privacy and terms are NOT built here. The real policies live on monstera.ca and
+every page links out to them; netlify.toml 301s /privacy and /terms there.
 
 WHY THE UNQUALIFIED PAGE NOW CARRIES THE PIXEL
 Earlier it carried nothing at all. That kept it out of the conversion count,
@@ -73,6 +74,25 @@ SCHEDULE_BLOCK = '''<script>
 })();
 </script>'''
 
+# ============================================================================
+# LEGAL AND CONTACT LINKS — ONE PLACE, SHARED BY EVERY PAGE.
+# The real policies live on monstera.ca and already cover this funnel: lead
+# forms, Meta Pixel, SMS consent and opt-out, the GoHighLevel CRM, sharing with
+# North Group, retention and access requests. Duplicating them here would create
+# two policies for one act of data collection, which is worse than none, so
+# these link out instead. netlify.toml also 301s /privacy and /terms there so
+# older links do not 404.
+# The SMS link matters: the booking form takes a phone number and the lead is
+# then called and texted, so the opt-in and opt-out terms must be one click away.
+# ============================================================================
+LEGAL_LINKS = (
+    '<a href="https://monstera.ca/privacy" target="_blank" rel="noopener">Privacy Policy</a> &middot; '
+    '<a href="https://monstera.ca/terms" target="_blank" rel="noopener">Terms of Service</a> &middot; '
+    '<a href="https://monstera.ca/privacy#sms" target="_blank" rel="noopener">SMS Disclosure</a><br>'
+    '<a href="mailto:emma.pace@monstera.ca">emma.pace@monstera.ca</a> &middot; '
+    '<a href="tel:+16476437037">647-643-7037</a>'
+)
+
 TITLE_QUALIFIED   = "You're Booked with Emma | North Group Real Estate"
 TITLE_UNQUALIFIED = "You're Booked | North Group Real Estate"
 
@@ -84,18 +104,13 @@ TARGETS = [
                                                                  False, PIXEL_BLOCK, '', TITLE_UNQUALIFIED),
 ]
 
-# Legal pages share one template; the body is a separate file per page so the
-# footer and brokerage identification can never drift between them.
-LEGAL = [
-    ('legal_privacy.body.html', 'privacy.html', 'Privacy Policy | North Group Real Estate'),
-    ('legal_terms.body.html',   'terms.html',   'Terms of Service | North Group Real Estate'),
-]
 
 for src, out, needs_reviews, pixel, schedule, title in TARGETS:
     h = pathlib.Path(src).read_text()
     for token in ['__SHARED_CSS__', '__NG_LOGO__'] + (['__REVIEWS__'] if needs_reviews else []):
         assert token in h, f'{src} is missing {token}'
-    h = h.replace('__SHARED_CSS__', CSS).replace('__NG_LOGO__', NGLOGO)
+    h = (h.replace('__SHARED_CSS__', CSS).replace('__NG_LOGO__', NGLOGO)
+           .replace('__LEGAL_LINKS__', LEGAL_LINKS))
     if needs_reviews:
         h = (h.replace('__REVIEWS__', wall.render(None))
                .replace('__REVIEW_COUNT__', str(wall.COUNT)))
@@ -118,15 +133,8 @@ for src, out, needs_reviews, pixel, schedule, title in TARGETS:
     if 'confirmation' in out:
         prose = h.lower().replace('zoom-in', '').replace('zoom-out', '')
         assert 'zoom' not in prose, f'{out} still mentions zoom'
+    for must in ('monstera.ca/privacy', 'monstera.ca/terms', 'monstera.ca/privacy#sms'):
+        assert must in h, f'{out} is missing the {must} link'
+    assert '__LEGAL_LINKS__' not in h, f'{out} left the legal-links token unreplaced'
     print(f'{out:36} {len(h):>7,} bytes   {"+".join(tracked)}')
 
-LEGAL_TPL = pathlib.Path('legal.src.html').read_text()
-for body_file, out, title in LEGAL:
-    h = (LEGAL_TPL.replace('__SHARED_CSS__', CSS)
-                  .replace('__NG_LOGO__', NGLOGO)
-                  .replace('__LEGAL_TITLE__', title)
-                  .replace('__LEGAL_BODY__', pathlib.Path(body_file).read_text()))
-    assert 'Real Broker Ontario Ltd., Brokerage' in h, f'{out} lost the brokerage identification'
-    assert 'fbq' not in h, f'{out} should carry no analytics'
-    pathlib.Path(out).write_text(h)
-    print(f'{out:36} {len(h):>7,} bytes   no analytics')

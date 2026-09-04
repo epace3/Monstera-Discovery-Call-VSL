@@ -6,6 +6,21 @@
   publish = "site"
   command = "./build.sh"
 
+# The real privacy policy and terms live on monstera.ca and already cover this
+# funnel. These 301s keep any older /privacy or /terms link working instead of
+# serving a second, competing copy of the same policy.
+[[redirects]]
+  from = "/privacy"
+  to = "https://monstera.ca/privacy"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/terms"
+  to = "https://monstera.ca/terms"
+  status = 301
+  force = true
+
 # Long cache on the review screenshots: they are content-stable and
 # fingerprinted by filename. Keeps repeat visits fast.
 [[headers]]
