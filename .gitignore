@@ -5,3 +5,5 @@ __pycache__/
 src/vsl_registration_page.html
 src/vsl_confirmation_qualified.html
 src/vsl_confirmation_unqualified.html
+src/privacy.html
+src/terms.html

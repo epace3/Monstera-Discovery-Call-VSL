@@ -43,7 +43,10 @@ ABOVE_FOLD = {
     "registration": [("headline", "h1"), ("subheadline", ".lede"), ("video", ".video-frame"),
                      ("social proof bar", ".proof"), ("book a call button", ".cta-hero")],
     "confirmation": [("headline", "h1"), ("video", ".video-frame")],
-    "confirmation-unqualified": [("headline", "h1"), ("video", ".video-frame")],
+    # The unqualified page carries no video: it goes to leads booked with a
+    # different agent, so Emma's "before we talk" clip does not belong on it.
+    "confirmation-unqualified": [("headline", "h1"), ("call details", ".details")],
+    "legal": [("headline", "h1")],
 }
 
 # Compliance strings. Tune BROKERAGE/AGENTS per client; the rest are generic.
@@ -83,21 +86,33 @@ def audit(path, page_type):
     # ---------- 4. TRACKING (static) ----------
     print("\nTRACKING")
     tracked = re.findall(r"fbq\('track',\s*'(\w+)'", html)
-    if page_type == "confirmation-unqualified":
-        # The unqualified page must carry NO tracking at all. This is the whole
-        # point of splitting the confirmation page in two: an under-threshold
-        # booking can never be counted or retargeted, however it arrives.
-        for banned in ("fbq", "connect.facebook.net", "facebook.com/tr"):
-            check(banned not in html, f"unqualified page contains no {banned}")
-        check(not tracked, "unqualified page fires no events at all", f"found {tracked}")
+    if page_type == "legal":
+        check("fbq" not in html, "legal page carries no analytics")
     else:
         check(re.search(r"fbq\('init',\s*'\d+'\)", html), "Meta pixel base code present")
-        if page_type == "registration":
+        if page_type == "confirmation-unqualified":
+            # The unqualified page needs the BASE pixel so these leads can be
+            # excluded from targeting, but it must never fire a conversion.
+            check(tracked == ["PageView"], "unqualified fires PageView only, no conversion",
+                  f"found {tracked}")
+            check("Schedule" not in html, "unqualified page contains no Schedule event")
+        elif page_type == "registration":
             check(tracked == ["PageView"], "registration fires PageView only, no conversion",
                   f"found {tracked}")
         else:
-            check("Schedule" in tracked, "qualified page fires the Schedule conversion")
+            check(tracked.count("Schedule") == 1, "qualified page fires exactly one Schedule",
+                  f"found {tracked}")
             check("eventID" in html, "Schedule carries an eventID for CAPI deduplication")
+            # A Schedule with no id cannot deduplicate against the server-side
+            # CAPI event, so the browser must stay silent when the id is absent.
+            check(re.search(r"if \(!inviteeId\) return;", html),
+                  "no Schedule is fired when invitee_uuid is absent")
+
+    # The confirmation pages describe a 15-minute outbound PHONE call.
+    # zoom-in / zoom-out are CSS cursor keywords, not a reference to Zoom.
+    if page_type.startswith("confirmation"):
+        prose = html.lower().replace("zoom-in", "").replace("zoom-out", "")
+        check("zoom" not in prose, "no Zoom reference anywhere on the page")
 
     with sync_playwright() as p:
         b = p.chromium.launch()
@@ -146,8 +161,12 @@ def audit(path, page_type):
         ratio = pg.evaluate("""()=>{const e=document.querySelector('.video-frame');
             if(!e) return null; const r=e.getBoundingClientRect();
             return +(r.width/r.height).toFixed(3);}""")
-        check(ratio is not None and abs(ratio - 1.537) < 0.02,
-              "video matches its source aspect ratio (not letterboxed)", f"rendered {ratio}")
+        if ratio is None:
+            check(page_type in ("confirmation-unqualified", "legal"),
+                  "no video on this page type, as intended")
+        else:
+            check(abs(ratio - 1.537) < 0.02,
+                  "video matches its source aspect ratio (not letterboxed)", f"rendered {ratio}")
 
         small = pg.evaluate("""()=>{const bad=[];
             document.querySelectorAll('a.cta, button.cta, .js-book').forEach(e=>{
@@ -180,9 +199,11 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("path")
     ap.add_argument("--type", choices=["registration", "confirmation",
-                                       "confirmation-unqualified"], default=None)
+                                       "confirmation-unqualified", "legal"], default=None)
     a = ap.parse_args()
     low = a.path.lower()
     t = a.type or ("confirmation-unqualified" if "unqualified" in low
-                   else "confirmation" if "confirm" in low else "registration")
+                   else "confirmation" if "confirm" in low
+                   else "legal" if ("privacy" in low or "terms" in low)
+                   else "registration")
     sys.exit(audit(a.path, t))

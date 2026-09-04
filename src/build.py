@@ -3,24 +3,26 @@
 Assemble the funnel pages: inline the CSS, the co-branded lockup, the review
 wall, and the tracking blocks.
 
-Produces three pages:
-  vsl_registration_page.html          pixel base only, no conversion event
-  vsl_confirmation_qualified.html     pixel base + Schedule conversion
-  vsl_confirmation_unqualified.html   NO pixel at all, not one byte
+Produces five pages:
+  vsl_registration_page.html          pixel base + PageView, no conversion
+  vsl_confirmation_qualified.html     pixel base + PageView + Schedule  -> /booked
+  vsl_confirmation_unqualified.html   pixel base + PageView, NO conversion -> /confirmed
+  privacy.html                        no analytics
+  terms.html                          no analytics
 
-The qualified/unqualified split is the traffic gate. Because the unqualified
-page carries no pixel code whatsoever, an under-threshold lead cannot fire a
-conversion, cannot land in a retargeting audience, and cannot be counted, no
-matter how they arrive. That is stronger than gating on a URL parameter.
+WHY THE UNQUALIFIED PAGE NOW CARRIES THE PIXEL
+Earlier it carried nothing at all. That kept it out of the conversion count,
+which was the point, but it also made these leads invisible: with no PageView
+there is no audience to exclude them from, so ad spend keeps chasing people who
+already booked with the team. The base pixel plus PageView fixes that. The
+conversion event is still the gate, and it exists on the qualified page only.
 """
-import base64, pathlib
+import base64, pathlib, re
 import wall
 
 # ============================================================================
 # ONE PLACE TO CHANGE THE PIXEL.
 # Dataset ID, confirmed by Emma in Events Manager (Sept 2026).
-# Changing it here updates the registration page and the qualified
-# confirmation page together. The unqualified page never receives it.
 # ============================================================================
 PIXEL_ID = '1828499953929219'
 
@@ -46,49 +48,50 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id={PIXEL_ID}&ev=PageView&noscript=1" alt=""/></noscript>
 <!-- End Meta Pixel Code -->'''
 
-# IMPORTANT: this comment SHIPS in the served HTML, so it must not describe
-# the segmentation. A visitor can view-source their own confirmation page, and
-# "you were routed here because you are under the price threshold" is the last
-# thing they should read. The full explanation lives here in the build script,
-# which is never served:
-#   This is the UNQUALIFIED confirmation page. Leads under the price threshold
-#   are routed here and book with a different agent. It carries no pixel base
-#   code, no PageView and no conversion event, so an unqualified booking can
-#   never be counted as a conversion or land in a retargeting audience.
-#   Never add tracking here "just for visibility".
 NO_PIXEL_BLOCK = '''<!-- No analytics on this page by design. -->'''
 
-# Notes for whoever edits this next (kept out of the served HTML):
-#   Only qualified traffic reaches this page, so the page itself is the gate;
-#   no URL parameter is needed. DEDUPLICATION: the GHL workflow also sends
-#   Schedule to the Meta Conversions API from the Calendly invitee.created
-#   webhook. Two Schedule events for one booking double-count unless both
-#   carry the SAME eventID, so this passes Calendly's invitee UUID as the
-#   eventID; configure the GHL CAPI call to send that same UUID as its
-#   event_id. To keep Schedule server-side only, delete SCHEDULE_BLOCK.
+# DEDUPLICATION. The GHL workflow also sends Schedule to the Meta Conversions
+# API from the Calendly invitee.created webhook. Two Schedule events for one
+# booking double-count unless both carry the SAME eventID, so this passes
+# Calendly's invitee UUID as the eventID; the GHL CAPI call must send that same
+# UUID as its event_id.
+#
+# If the UUID is missing there is no dedupe key, so this fires NOTHING and lets
+# the server-side event be the single report. Firing without an id double-counts;
+# firing nothing loses nothing. (Turn on "Pass event details to your redirect
+# page" in the Calendly event so the UUID actually arrives.)
 SCHEDULE_BLOCK = '''<script>
 (function () {
   if (typeof fbq !== 'function') return;
   var p = new URLSearchParams(window.location.search);
   var inviteeId = p.get('invitee_uuid') || p.get('invitee_id');
-  if (inviteeId) {
-    fbq('track', 'Schedule', {}, { eventID: inviteeId });
-  } else {
-    fbq('track', 'Schedule');
-  }
+  // No id means no dedupe key. Fire nothing and let the server-side CAPI
+  // event be the single report. Firing without an id double-counts;
+  // firing nothing loses nothing.
+  if (!inviteeId) return;
+  fbq('track', 'Schedule', {}, { eventID: inviteeId });
 })();
 </script>'''
 
-TITLE = "You're In. Watch This Before We Talk | North Group Real Estate"
+TITLE_QUALIFIED   = "You're Booked with Emma | North Group Real Estate"
+TITLE_UNQUALIFIED = "You're Booked | North Group Real Estate"
 
-# (source, output, needs review wall, pixel block, schedule block)
+# (source, output, needs review wall, pixel block, schedule block, title)
 TARGETS = [
-    ('registration.src.html', 'vsl_registration_page.html', True, PIXEL_BLOCK, None),
-    ('confirmation.src.html', 'vsl_confirmation_qualified.html', False, PIXEL_BLOCK, SCHEDULE_BLOCK),
-    ('confirmation.src.html', 'vsl_confirmation_unqualified.html', False, NO_PIXEL_BLOCK, ''),
+    ('registration.src.html', 'vsl_registration_page.html',      True,  PIXEL_BLOCK, None, None),
+    ('confirmation.src.html', 'vsl_confirmation_qualified.html', False, PIXEL_BLOCK, SCHEDULE_BLOCK, TITLE_QUALIFIED),
+    ('confirmation-unqualified.src.html', 'vsl_confirmation_unqualified.html',
+                                                                 False, PIXEL_BLOCK, '', TITLE_UNQUALIFIED),
 ]
 
-for src, out, needs_reviews, pixel, schedule in TARGETS:
+# Legal pages share one template; the body is a separate file per page so the
+# footer and brokerage identification can never drift between them.
+LEGAL = [
+    ('legal_privacy.body.html', 'privacy.html', 'Privacy Policy | North Group Real Estate'),
+    ('legal_terms.body.html',   'terms.html',   'Terms of Service | North Group Real Estate'),
+]
+
+for src, out, needs_reviews, pixel, schedule, title in TARGETS:
     h = pathlib.Path(src).read_text()
     for token in ['__SHARED_CSS__', '__NG_LOGO__'] + (['__REVIEWS__'] if needs_reviews else []):
         assert token in h, f'{src} is missing {token}'
@@ -98,13 +101,32 @@ for src, out, needs_reviews, pixel, schedule in TARGETS:
                .replace('__REVIEW_COUNT__', str(wall.COUNT)))
     if schedule is not None:
         h = h.replace('__PIXEL_BLOCK__', pixel).replace('__SCHEDULE_BLOCK__', schedule)
-        h = h.replace('__PAGE_TITLE__', TITLE)
+        h = h.replace('__PAGE_TITLE__', title)
     pathlib.Path(out).write_text(h)
 
-    # hard guarantee: the unqualified page must contain no tracking whatsoever
-    if 'unqualified' in out:
-        for banned in ('fbq', 'facebook.net', 'facebook.com/tr', PIXEL_ID):
-            assert banned not in h, f'{out} must not contain {banned!r}'
-        print(f'{out:36} {len(h):>7,} bytes   NO PIXEL (verified)')
+    # --- hard guarantees, checked on every build ---
+    tracked = re.findall(r"fbq\('track',\s*'(\w+)'", h)
+    assert f"fbq('init', '{PIXEL_ID}')" in h, f'{out} lost the pixel base code'
+    if 'unqualified' in out or 'registration' in out:
+        assert tracked == ['PageView'], f'{out} must fire PageView only, found {tracked}'
     else:
-        print(f'{out:36} {len(h):>7,} bytes   pixel {PIXEL_ID}')
+        assert tracked == ['PageView', 'Schedule'], f'{out} must fire PageView then Schedule, found {tracked}'
+        assert 'eventID' in h, f'{out} Schedule must carry an eventID'
+    # The confirmation pages describe a phone call, never a video meeting.
+    # 'zoom-in' / 'zoom-out' are CSS cursor keywords in shared.css, not a
+    # reference to Zoom, so they are excluded rather than renamed.
+    if 'confirmation' in out:
+        prose = h.lower().replace('zoom-in', '').replace('zoom-out', '')
+        assert 'zoom' not in prose, f'{out} still mentions zoom'
+    print(f'{out:36} {len(h):>7,} bytes   {"+".join(tracked)}')
+
+LEGAL_TPL = pathlib.Path('legal.src.html').read_text()
+for body_file, out, title in LEGAL:
+    h = (LEGAL_TPL.replace('__SHARED_CSS__', CSS)
+                  .replace('__NG_LOGO__', NGLOGO)
+                  .replace('__LEGAL_TITLE__', title)
+                  .replace('__LEGAL_BODY__', pathlib.Path(body_file).read_text()))
+    assert 'Real Broker Ontario Ltd., Brokerage' in h, f'{out} lost the brokerage identification'
+    assert 'fbq' not in h, f'{out} should carry no analytics'
+    pathlib.Path(out).write_text(h)
+    print(f'{out:36} {len(h):>7,} bytes   no analytics')
