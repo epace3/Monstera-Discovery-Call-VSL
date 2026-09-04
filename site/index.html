@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ============================================================
+     META PIXEL - base code. Pixel ID 1828499953929219.
+     NO conversion event fires on this page by design: audience
+     collection only. The Schedule event lives on the confirmation
+     page. PageView is part of the standard base snippet and is what
+     builds the retargeting audience; it is not a conversion event.
+     ============================================================ -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1828499953929219');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1828499953929219&ev=PageView&noscript=1" alt=""/></noscript>
+<!-- End Meta Pixel Code -->
+
+<title>Before You List Your Toronto Home | North Group Real Estate</title>
+<meta name="description" content="See what actually sold in your Toronto area in the last 60 days. Book a free 15-minute call with a sales representative at Real Broker Ontario Ltd., Brokerage.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   MONSTERA VSL FUNNEL - SHARED STYLES
+   Brokerage: Real Broker Ontario Ltd., Brokerage
+   ============================================================ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink:      #101211;
+  --ink-2:    #3d4441;
+  --ink-3:    #6b736f;
+  --ink-4:    #9aa19d;
+  --rule:     #e6e8e7;
+  --rule-2:   #f1f3f2;
+  --paper:    #ffffff;
+  --paper-2:  #fafbfa;
+  --green:    #1a6d4e;
+  --green-d:  #12513a;
+  --green-t:  #eef4f1;
+  --radius:   10px;
+  --wrap:     920px;
+  --narrow:   700px;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap   { max-width: var(--wrap);   margin-inline: auto; padding-inline: 24px; }
+.narrow { max-width: var(--narrow); margin-inline: auto; padding-inline: 24px; }
+
+/* ---------- TYPE ---------- */
+h1 {
+  font-size: clamp(23px, 3.6vw, 33px);
+  font-weight: 800; line-height: 1.16; letter-spacing: -0.8px; color: var(--ink);
+  margin-inline: auto;
+}
+@media (min-width: 700px) { h1 { max-width: 32ch; } }
+h2 { font-size: clamp(20px, 2.8vw, 25px); font-weight: 700; letter-spacing: -0.5px; }
+h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
+.lede { font-size: clamp(16px, 2vw, 18px); color: var(--ink-2); font-weight: 400; }
+
+.eyebrow {
+  font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px;
+  text-transform: uppercase; color: var(--green);
+}
+
+.section-head { text-align: center; margin-bottom: 30px; }
+.section-head h2 { margin-bottom: 8px; }
+.section-head p  { color: var(--ink-3); font-size: 15px; }
+
+/* ---------- HERO ---------- */
+/* ---------- HERO ----------
+   Mobile: single column, video edge to edge for maximum size.
+   Desktop: two columns so the video can be LARGE while the CTA and
+   proof still sit above the fold. Grid areas keep the DOM order
+   (headline, sub, video, CTA, proof) correct for mobile and screen
+   readers while letting desktop place the video in its own column. */
+.hero { padding: 20px 0 16px; text-align: center; }
+.hero-grid {
+  /* STACKED at every width, by design: headline, subheadline, video,
+     social proof bar, button. Never side by side. */
+  display: grid;
+  grid-template-areas: "head" "sub" "vid" "proof" "note" "cta" "ctasub";
+  max-width: 920px; margin-inline: auto; padding-inline: 24px;
+}
+.hero h1        { grid-area: head; margin-bottom: 10px; }
+.hero .lede     { grid-area: sub;  max-width: 560px; margin-inline: auto; margin-bottom: 16px; font-size: 16px; }
+.hero .video-frame { grid-area: vid; }
+.hero .cta-hero { grid-area: cta; justify-self: center; }
+.hero .cta-sub { grid-area: ctasub; }
+.hero .proof    { grid-area: proof; }
+.hero .proof-note { grid-area: note; }
+
+/* video edge to edge on phones: claws back the 48px of side padding */
+@media (max-width: 899px) {
+  .hero-grid > .video-frame { margin-inline: -24px; width: calc(100% + 48px); max-width: none; border-radius: 0; }
+}
+
+
+/* ---------- VIDEO ---------- */
+.video-frame {
+  /* Ratio matches the Vimeo source (65.06% padding = 1.537:1), not 16:9.
+     Height is driven by the viewport so the CTA and proof below it stay
+     above the fold on short laptops as well as phones. */
+  position: relative;
+  aspect-ratio: 10000 / 6506;
+  /* Phones: full available width. Desktop: fills its grid column, with a
+     viewport-height cap so a short laptop can never lose the CTA. */
+  /* Constrain the WIDTH from viewport height, never max-height: capping
+     the height fights aspect-ratio and squashes the video. Deriving width
+     from 48vh keeps the true 1.537:1 ratio AND guarantees the proof bar
+     and button below it stay above the fold on a 720px-tall laptop. */
+  width: min(880px, 100%, calc(48vh * 1.537));
+  height: auto;
+  margin-inline: auto;
+  background: var(--ink); border-radius: var(--radius); overflow: hidden;
+  box-shadow: 0 2px 4px rgba(16,18,17,.04), 0 12px 32px rgba(16,18,17,.09);
+}
+.video-frame iframe, .video-frame video { width: 100%; height: 100%; border: 0; display: block; }
+
+.video-ph {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; color: #fff; background: var(--ink); cursor: pointer;
+}
+.video-ph small { font-size: 12.5px; color: #767c79; max-width: 300px; text-align: center; }
+.play {
+  width: 62px; height: 62px; border-radius: 50%;
+  background: rgba(255,255,255,.10); border: 2px solid rgba(255,255,255,.28);
+  display: flex; align-items: center; justify-content: center;
+}
+.play::after {
+  content: ''; width: 0; height: 0; margin-left: 4px;
+  border-left: 17px solid #fff;
+  border-top: 10.5px solid transparent; border-bottom: 10.5px solid transparent;
+}
+
+/* ---------- BOOKING CTA ---------- */
+.cta {
+  display: inline-block; background: #fff; color: var(--green-d);
+  font-size: clamp(16px, 2.2vw, 18px); font-weight: 800; letter-spacing: -0.2px;
+  text-decoration: none; padding: 18px 40px; border-radius: 10px;
+  box-shadow: 0 2px 0 rgba(0,0,0,.08); transition: transform .15s ease, box-shadow .15s ease;
+  min-height: 56px; line-height: 1.25;
+}
+.cta:hover  { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.18); }
+.cta:active { transform: translateY(0); }
+.cta:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.cta-sub { margin-top: 10px; font-size: 13.5px; color: var(--ink-3); }
+.cta-repeat { text-align: center; margin-top: 26px; }
+
+/* Calendly escape hatch: quiet until it is needed. */
+.cal-fallback[hidden] { display: none !important; }
+.cal-fallback {
+  margin-top: 4px; text-align: center;
+  font-size: 14px; color: var(--ink-4);
+}
+.cal-fallback a { color: var(--ink-3); text-decoration: underline; }
+.cal-fallback a:hover { color: var(--green); }
+
+/* promoted by the 8-second watchdog */
+.cal-fallback.is-promoted {
+  margin-top: 22px; padding: 20px 24px;
+  background: #fff8e6; border: 1px solid #f0d999; border-radius: 10px;
+  font-size: 16px; font-weight: 600; color: #6b4e00;
+}
+.cal-fallback.is-promoted a {
+  display: inline-block; margin-top: 8px;
+  color: #fff; background: var(--green); text-decoration: none;
+  padding: 12px 24px; border-radius: 8px; font-weight: 700;
+}
+.cal-fallback.is-promoted a:hover { background: var(--green-d); color: #fff; }
+
+@media (max-width: 560px) {
+  .cta { display: block; padding: 18px 24px; }
+}
+
+/* sticky booking bar — phones only, so it never covers desktop content */
+.stickybar { display: none; }
+@media (max-width: 760px) {
+  .stickybar {
+    display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 800;
+    background: rgba(255,255,255,.96); backdrop-filter: blur(8px);
+    border-top: 1px solid var(--rule);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+  .stickybar[hidden] { display: none; }
+  .stickybar .cta {
+    display: block; width: 100%; text-align: center;
+    background: var(--green); color: #fff; padding: 16px 20px; font-size: 16px;
+  }
+  .stickybar .cta:hover { background: var(--green-d); transform: none; }
+  /* keep the footer clear of the bar */
+  body { padding-bottom: 84px; }
+}
+
+/* ---------- HERO CTA + PROOF (above the fold) ---------- */
+.cta-hero {
+  margin-top: 16px; background: var(--green); color: #fff;
+  padding: 16px 38px; font-size: 17px; min-height: 54px;
+  box-shadow: 0 2px 4px rgba(16,18,17,.08), 0 8px 22px rgba(26,109,78,.22);
+}
+.cta-hero:hover { background: var(--green-d); color: #fff; }
+
+.proof {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; max-width: 520px; margin: 16px auto 0;
+}
+.proof-item { text-align: center; }
+.proof-item b {
+  display: block; font-size: clamp(21px, 3.4vw, 26px); font-weight: 800;
+  color: var(--ink); line-height: 1.1; letter-spacing: -0.5px;
+}
+.proof-item b i { font-style: normal; color: var(--green); font-size: .72em; margin-left: 1px; }
+.proof-item span {
+  display: block; margin-top: 4px; font-size: 12px; line-height: 1.35; color: var(--ink-3);
+}
+.proof-note {
+  text-align: center; font-size: 10.5px; color: var(--ink-4);
+  margin: 8px auto 0; max-width: 560px; line-height: 1.4;
+}
+@media (max-width: 420px) {
+  .proof-item span { font-size: 11px; }
+}
+
+/* ---------- REVIEWS (actual Google screenshots) ---------- */
+.reviews { background: var(--paper-2); border-block: 1px solid var(--rule-2); padding: 52px 0; }
+
+.review-grid { columns: 1; column-gap: 16px; }
+@media (min-width: 700px)  { .review-grid { columns: 2; } }
+@media (min-width: 1020px) { .review-grid { columns: 3; } }
+
+.shot {
+  display: block; width: 100%; margin: 0 0 16px; padding: 0;
+  border: 0; background: none; cursor: zoom-in;
+  break-inside: avoid; -webkit-column-break-inside: avoid;
+  border-radius: 12px; overflow: hidden; line-height: 0;
+  box-shadow: 0 1px 2px rgba(16,18,17,.06), 0 6px 18px rgba(16,18,17,.08);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.shot:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(16,18,17,.14); }
+.shot:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+.shot img { width: 100%; height: auto; display: block; border-radius: 12px; }
+
+.review-note {
+  text-align: center; font-size: 12px; color: var(--ink-4);
+  margin-top: 26px; max-width: 620px; margin-inline: auto; line-height: 1.65;
+}
+
+/* tap/click to enlarge */
+.lightbox[hidden] { display: none !important; }
+.lightbox {
+  position: fixed; inset: 0; z-index: 900;
+  background: rgba(10,12,11,.92);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; cursor: zoom-out;
+}
+.lightbox img {
+  max-width: min(680px, 100%); max-height: 92vh; width: auto; height: auto;
+  border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+.lightbox-close {
+  position: absolute; top: 14px; right: 16px;
+  width: 42px; height: 42px; border-radius: 50%; border: 0;
+  background: rgba(255,255,255,.14); color: #fff; font-size: 22px;
+  line-height: 1; cursor: pointer;
+}
+.lightbox-close:hover { background: rgba(255,255,255,.24); }
+
+/* ---------- AGENT IDENTIFICATION (RECO 5.1 / 5.2) ---------- */
+.agents { padding: 44px 0; }
+.agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.agent {
+  border: 1px solid var(--rule); border-radius: var(--radius);
+  padding: 20px 22px; background: #fff;
+}
+.agent .name { font-size: 16px; font-weight: 700; color: var(--ink); }
+.agent .term { font-size: 13px; color: var(--green); font-weight: 600; margin-top: 2px; }
+.agent .firm { font-size: 12.5px; color: var(--ink-3); margin-top: 8px; line-height: 1.5; }
+
+/* ---------- FOOTER + COMPLIANCE ---------- */
+.foot { padding: 42px 0 38px; text-align: center; border-top: 1px solid var(--rule); }
+.foot .brand-lockup {
+  /* Official North Group x Real co-branded lockup. Team and brokerage
+     carry equal visual weight in this mark, which is what RECO
+     prominence needs. If you swap in a team-only or personal logo, the
+     brokerage identification must be the SAME SIZE beside it. */
+  height: 46px; width: auto; margin: 0 auto 16px; display: block;
+}
+.foot .fname { font-weight: 700; color: var(--ink); font-size: 15px; margin-bottom: 4px; }
+.foot p { font-size: 13px; color: var(--ink-3); }
+.foot .fagents { margin-top: 12px; font-size: 13px; color: var(--ink-2); }
+
+.legal { background: #f6f7f7; border-top: 1px solid var(--rule); padding: 32px 0 46px; }
+.legal-inner { max-width: 760px; margin-inline: auto; padding-inline: 24px; }
+.legal p {
+  font-size: 11.5px; color: var(--ink-3); line-height: 1.75; margin-bottom: 11px;
+}
+.legal p:first-child { color: var(--ink-2); font-size: 12.5px; }
+.legal strong { color: var(--ink); font-weight: 600; }
+.legal a { color: var(--ink-3); }
+
+/* ---------- UTIL ---------- */
+.pad-lg { padding: 46px 0; }
+.pad-md { padding: 32px 0; }
+
+
+/* ============================================================
+   TYPEFORM POPUP — fallback positioning.
+   Mirrors Typeform's own popup.css. If their stylesheet ever fails
+   to load or moves, these rules still render the popup full-screen
+   instead of leaving an unstyled block behind a locked page.
+   Structure (verified against the live embed):
+     .tf-v1-popup > .tf-v1-spinner + .tf-v1-iframe-wrapper > iframe + .tf-v1-close
+   ============================================================ */
+.tf-v1-popup {
+  position: fixed; inset: 0; z-index: 10001;
+  background: rgba(0, 0, 0, .75);
+  display: flex; align-items: center; justify-content: center;
+}
+.tf-v1-popup .tf-v1-iframe-wrapper {
+  position: relative;
+  width: min(1000px, 96vw);
+  height: min(760px, 92vh);
+  background: #fff; border-radius: 10px; overflow: hidden;
+}
+.tf-v1-popup .tf-v1-iframe-wrapper iframe {
+  width: 100%; height: 100%; border: 0; display: block;
+}
+.tf-v1-popup .tf-v1-close {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  width: 40px; height: 40px; border: 0; border-radius: 50%;
+  background: rgba(0, 0, 0, .06); cursor: pointer;
+}
+@media (max-width: 640px) {
+  .tf-v1-popup .tf-v1-iframe-wrapper {
+    width: 100vw; height: 100dvh; border-radius: 0;
+  }
+}
+
+</style>
+
+<!-- ============================================================
+     Typeform popup stylesheet - REQUIRED, do not remove.
+     embed.js only injects this automatically when the page also has
+     an inline widget (data-tf-live). On a popup-only page it does
+     not, so the popup renders as an unstyled block in normal flow
+     while Typeform still sets body{overflow:hidden}: the page then
+     looks frozen and the form never appears.
+     ============================================================ -->
+<link rel="stylesheet" href="https://embed.typeform.com/next/css/popup.css">
+</head>
+<body>
+
+<!-- ============================================================
+     SECTIONS 1-5, ABOVE THE FOLD
+     Fixed order: headline, subheadline, video, social proof bar,
+     book-a-call button. All five must be visible without scrolling
+     on desktop AND mobile. Run audit_funnel_page.py before shipping.
+     No top banner on this page by design.
+     ============================================================ -->
+<section class="hero">
+  <div class="hero-grid">
+
+    <!-- 1. HEADLINE -->
+    <h1>Before you list your Toronto home, see what actually sold in your area in the last 60 days.</h1>
+
+    <!-- 2. SUBHEADLINE -->
+    <p class="lede">A free 15-minute call. No listing agreement, no obligation.</p>
+
+    <!-- 3. VIDEO. Vimeo 1223856193. Source ratio 65.06% = 1.537:1, not 16:9.
+         Desktop: its own column so it can be large without pushing the
+         button below the fold. Mobile: full width, edge to edge. -->
+    <div class="video-frame">
+      <iframe src="https://player.vimeo.com/video/1223856193?h=f7d4df9aa8&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              title="Watch This If You're Thinking Of Moving In Toronto..."></iframe>
+    </div>
+
+    <!-- 4. SOCIAL PROOF BAR
+         RECO Bulletin 5.1: volume/activity claims must explain how they
+         were measured, and a TEAM achievement must be identified as one
+         with the team size stated. The note below does that. Do not
+         delete it; refresh the "as of" date whenever figures change. -->
+    <div class="proof">
+      <div class="proof-item"><b>23</b><span>Sales representatives servicing the GTA</span></div>
+      <div class="proof-item"><b>518</b><span>Google reviews</span></div>
+      <div class="proof-item"><b>4.9<i>&#9733;</i></b><span>Average rating</span></div>
+    </div>
+    <p class="proof-note">Statistics across our team, North Group Real Estate, at Real Broker Ontario Ltd., Brokerage. As of September 2026.</p>
+
+    <!-- 5. BOOK A CALL BUTTON
+         A real link to the hosted form. JS upgrades it to the Typeform
+         popup; if the embed script is blocked the link still books.
+         NOTE: Typeform's UI gives a LIVE id (01M1JAFJDTJE6GB8G1T7S38G3A).
+         The popup API does NOT resolve live ids. Use the FORM id. -->
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+    <p class="cta-sub">Takes about 90 seconds. You pick your own time at the end.</p>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     CALENDLY FALLBACK
+     The calendar loads inside Typeform, which loads inside this page.
+     Typeform documents that the Calendly step can fail to respond on
+     mobile because of that nesting, so this is the escape hatch.
+     Understated by default; the watchdog promotes it if the form has
+     not loaded 8 seconds after someone opens it.
+     ============================================================ -->
+<div class="wrap">
+  <p class="cal-fallback" id="calFallback">
+    Having trouble loading the calendar?
+    <a href="https://calendly.com/REPLACE-USERNAME/REPLACE-EVENT-SLUG" target="_blank" rel="noopener">Click here to book directly.</a>
+  </p>
+</div>
+
+<!-- ============================================================
+     SECTION 6, TESTIMONIALS
+     Real Google review screenshots, shown exactly as clients posted
+     them. Never paraphrase a review or add an outcome the reviewer
+     did not write: RECO Bulletin 5.1 prohibits false, misleading or
+     inaccurate statements, and a testimonial represents that the
+     client actually said those words.
+     ============================================================ -->
+<section class="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>What clients have said</h2>
+      <p>Real reviews from Google, exactly as clients posted them.</p>
+    </div>
+
+    <div class="review-grid">
+
+      <button class="shot" type="button" data-src="review-images/madeline-walden.webp">
+        <img src="review-images/madeline-walden.webp" width="620" height="700" loading="lazy" decoding="async"
+             alt="Madeline Walden (Maddy &amp; Derek) — 5 stars. &quot;We cannot say enough good things about Emma Pace! My husband and I had the smoothest buying, and selling process with her. From all the lengthy conversations leading up to prepping our home to sell, to all the finer details in between, she led us with confidence, and made us feel excited, and calm in a nerve-wracking process. Emma is professional, prompt, and extremely knowledgeable when it comes to real estate, marketing, and the industry. We are so happy with our outcome. Thanks so much North Group, and Emma!&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/winnie.webp">
+        <img src="review-images/winnie.webp" width="620" height="455" loading="lazy" decoding="async"
+             alt="Winnie — 5 stars. &quot;Emma helped us buy a lovely home in a wonderful neighborhood at a great price. From the beginning, she and her team were professional, knowledgeable, and understanding. She knows the market well and gave great advice, making the process as stress-free and smooth as possible.&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/natasja.webp">
+        <img src="review-images/natasja.webp" width="620" height="577" loading="lazy" decoding="async"
+             alt="Natasja — 5 stars. &quot;Amir helped us sell our home and buy a new one in a challenging market. He did so with incredible professionalism, calm and promptness. He is credit to North Group and I&#x27;m so please we got to work with him. He gave us reassurance and made our very short closing period manageable. He got us our dream house and helped us start a new chapter in a new city. I don&#x27;t want to move in the future. However, if I do have to move, I have confidence we will be reaching out to Amir and happy to work with him again!&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/greg-bellec.webp">
+        <img src="review-images/greg-bellec.webp" width="620" height="548" loading="lazy" decoding="async"
+             alt="Greg Bellec — 5 stars. &quot;My wife and I worked with Emma Pace to sell our condo, and were absolutely blown away by what she achieved for us! Not only did our unit sell for a price well above what we expected, but she made the process enjoyable and easy. From her initial walkthrough of the unit, to supporting us through the offer acceptance process, we felt assured we were in good hands - not to mention she is an absolute delight to work with! On her recommendation the unit was painted and staged, and she also developed a thorough plan to market it and hold an open house. We never got that far though, because we received an unbelievable offer just 36 hours after listing! We feel strongly that her advice contributed to the fantastic offer we received. We found Emma to be extremely knowledgeable of the downtown condo market, and as first-time sellers, we found her guidance to be truly indispensable. We&#x27;d also like to acknowledge the fantastic service we received from the Zoocasa brokerage - Mippy, who works in client support, handled every piece of paperwork and made everything a breeze. Highly recommend!&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/jose-antonio-sanchez.webp">
+        <img src="review-images/jose-antonio-sanchez.webp" width="620" height="537" loading="lazy" decoding="async"
+             alt="Jose Antonio Sanchez — 5 stars. &quot;Emma Pace was a great realtor to work with. As a first time home buyer, the process could seem daunting at times, but she was very thorough and helpful at every step of the way. She helped me get me not only one but two amazing properties. Emma epitomizes the modern realtor, truly digital, knowledgeable about the market and consultative. She became a “trusted advisor” through my buying journey. I have and will continue to recommend her to friends and family.&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/samten-dolker.webp">
+        <img src="review-images/samten-dolker.webp" width="620" height="715" loading="lazy" decoding="async"
+             alt="Samten Dolker — 5 stars. &quot;We&#x27;d been thinking about buying a home for a long time, but kept putting it off because Toronto&#x27;s real estate market felt overwhelming. Then, almost like serendipity, Amir called and explained everything in a way that made the process feel much less scary. We told him we wouldn&#x27;t buy until we found exactly what we wanted price, features, and our full checklist. He listened carefully and tailored the search to our needs. Throughout the process, he kept checking in, refining what we were looking for, and ultimately found us a home that checked all our boxes. We expected the search to take much longer, but he found the perfect match quickly. Amir was efficient with all the paperwork and always available when we needed him. Highly recommend!&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/karen-alvarenga.webp">
+        <img src="review-images/karen-alvarenga.webp" width="620" height="425" loading="lazy" decoding="async"
+             alt="Karen Alvarenga — 5 stars. &quot;We had the pleasure of working with Emma for both the purchase of our first home in 2020 and the recent sale of that same home in 2023. We could not have asked for a better agent to guide us through both processes. When we were buying our home, Emma listened to our needs and preferences and showed us a variety of homes that fit our criteria. She was patient and never pressured us to make a decision. When we found the right home, she was there every step of the way to help us navigate the purchase process. Fast forward to 2023, when we decided to sell our home, we knew that Emma was the only agent we wanted to work with. She provided invaluable advice on preparing our home for sale, including staging and minor repairs. She also helped us set a fair price and marketed our home effectively. Throughout both the buying and selling processes, Emma, Chase and Hilary were professional, knowledgeable, and responsive. They were always available to answer our questions and provide guidance, and made the entire experience stress-free. We would highly recommend Emma and her team to anyone looking for a trustworthy and effective agent to help them buy or sell their home. Thank you for all of your hard work and expertise!&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/osasuyi-ojomo.webp">
+        <img src="review-images/osasuyi-ojomo.webp" width="620" height="668" loading="lazy" decoding="async"
+             alt="Osasuyi Ojomo — 5 stars. &quot;Working with Amir was amazing. He was super helpful and supportive every step of the way and made the entire process seem less stressful and overwhelming. Amir made sure to connect with me to understand my needs and what my deal breakers were, while setting realistic expectations which was something I really appreciated. As a first time home buyer, I definitely had a never ending box of questions, but Amir always made sure to answer them over and over which made me feel well informed and empowered in my decision making. I probably could write a whole chapter, but thank you so much for all the help, guidance and support. 10/10 would recommend anytime.&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/christopher-smith.webp">
+        <img src="review-images/christopher-smith.webp" width="620" height="419" loading="lazy" decoding="async"
+             alt="Christopher Smith (Ali &amp; Chris) — 5 stars. &quot;My wife and I stumbled across Emma purely by chance when we went to look at a property in Roncesvalles, and thankfully so. It didn&#x27;t take us long to realize Emma&#x27;s deep knowledge of housing and the Toronto real estate market. Emma made the daunting task of finding our family home that much easier by understanding our must haves, nice to have, deal breakers and providing us options almost daily whilst also providing additional commentary and reviews on houses we particularly liked. This streamlined the process, saved time and made the experience that much less stressful. The amount of personalized effort Emma put in was truly appreciated. We then used both Emma &amp; Chase (Emma&#x27;s Colleague) over the next 18 months to find our dream home, they indulged in our many questions and talked us through every technical aspect of our many house visits. With their abundance of local knowledge and experience we felt like we were always getting an honest and straightforward opinion from them both. Finally, it is without hesitation that we would recommend both Emma/Chase services to anyone wishing to purchase property in the Toronto areas. We walked away happy knowing we got a fantastic property for our young family.&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/mona-nasr.webp">
+        <img src="review-images/mona-nasr.webp" width="620" height="891" loading="lazy" decoding="async"
+             alt="Mona Nasr — 5 stars. &quot;Emma &amp; her team are amazing! This is the second time we use their service &amp; we&#x27;ll definitely hire them for any future real estate services we may need. Emma paid attention to our requirements &amp; always found us places that were within those requirements. She &amp; her team worked hard to find us suitable places in a short time &amp; gave us a lot of information about those places &amp; the market... etc. They always answered our emails promptly. Chase is very friendly &amp; helpful, he always made showing appointments in times that were convenient for us &amp; answered any questions we had before &amp; after seeing places. Emma &amp; her team answered all our questions even if they were not directly related to their service &amp; even after we purchased a place which provided good support &amp; saved us time. I&#x27;d definitely recommend them to anyone who needs real estate services!&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/md-te-meron.webp">
+        <img src="review-images/md-te-meron.webp" width="620" height="855" loading="lazy" decoding="async"
+             alt="MD Te (Meron) — 5 stars. &quot;I knew exactly what I needed when I started this process and Amir was instrumental in materializing my want. An extremely professional, he set up our first zoom meeting with a “strategy call”, which is essentially walking me through the his real estate agency, the end-to-end process and expectations. Unfortunately every agents that I&#x27;ve worked with in the past quickly jumped in showings rather that taking the time to clarify the process and most importantly the financial part of it. Secondly, he was well versed about the market but never pressured me to make any decision. Thirdly, Amir was extremely patient as I was a first time buyer with myriads of questions. His grace coupled with his vast knowledge and consultative approach, I recommend him to anyone who is thinking in purchasing their forever home! Thank You, Meron&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/prasanth-pahi.webp">
+        <img src="review-images/prasanth-pahi.webp" width="620" height="612" loading="lazy" decoding="async"
+             alt="Prasanth Pahi — 5 stars. &quot;I worked with Emma / Chase who helped me buy a property in Toronto. The quantitative analysis that was provided (without me asking) was proactive, top notch, and high quality. Moreover the team always made themselves available to me if I had any questions (even late at night) - just goes to show how greatly service-oriented they are versus your traditional realtor who is looking to get your commission with doing the least amount of work/effort. Thoroughly enjoyed working them and I&#x27;d be happy to work with them again in the future.&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/fw-kong.webp">
+        <img src="review-images/fw-kong.webp" width="620" height="469" loading="lazy" decoding="async"
+             alt="FW Kong — 5 stars. &quot;We worked with Emma Pace who helped us successfully secure our property. We normally do our research before deciding on which agent to work with and by far Emma is the most committed, knowledgeable and professional agent we have met. As a first-time buyer, Emma was attentive in really understanding what our needs were (saving us a lot of time looking in the wrong places), and was extremely patient with our house-hunting and all the questions we had throughout the process. When it came to crunch time, you could count on her and her team to deliver punctually. She is exceptional at what she does and especially in a tough market, you absolutely need a realtor who truly has your interest at heart. Emma is undoubtedly that person! We have had a fantastic buying experience with her and her team at Zoocasa and highly recommend her to anyone looking for a property.&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/lukas-grey.webp">
+        <img src="review-images/lukas-grey.webp" width="620" height="386" loading="lazy" decoding="async"
+             alt="Lukas Grey — 5 stars. &quot;We worked with Emma &amp; Chase at Zoocasa for both the sale of our condo property and the purchase of a house. Their professionalism and honesty are top of class; they were up front on expectations and provided significant value-added insight into our transactions. Their knowledge of the market proved extremely helpful in our negotiations. We have been able to look at both transactions very fondly and are incredibly impressed with the speed and success with the entire process. They were proactive throughout each process and were very responsive whenever we had queries. We cannot recommend working with these two and Zoocasa enough!&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/aidan-shankman.webp">
+        <img src="review-images/aidan-shankman.webp" width="620" height="369" loading="lazy" decoding="async"
+             alt="Aidan Shankman — 5 stars. &quot;Emma was the backbone of my real estate dream team, helping me to purchase my first condo in Toronto. I came to Emma with some extensive research completed and this allowed her to focus my search even further and share the perfect set of listings. During our second showing I knew we had found my new home and Emma worked tirelessly to close my deal that same day. Received great support from the extended team at Zoocasa leading up to my closing day and move-in. Come in knowing what you want and let Emma and her team make it happen - highly recommend!&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/aashti-vijh.webp">
+        <img src="review-images/aashti-vijh.webp" width="620" height="346" loading="lazy" decoding="async"
+             alt="Aashti Vijh — 5 stars. &quot;I had the pleasure of working with Emma Pace and Chase Burns for the purchase of my first condo in Toronto. I was very impressed by how proactive they were in showing me properties which met my criteria, and scheduling condo viewings, even during these challenging times. The purchase process was made even smoother by Emma&#x27;s insightful market advice and vendor recommendations. I would definitely encourage first time home buyers to work with Emma and Chase from Zoocasa!&quot;">
+      </button>
+
+      <button class="shot" type="button" data-src="review-images/js.webp">
+        <img src="review-images/js.webp" width="620" height="221" loading="lazy" decoding="async"
+             alt="JS — 5 stars. &quot;I had a great experience working with Emma Pace when buying and selling. She exceeded my expectations of a realtor in terms of hard work, supportiveness, and skill.&quot;">
+      </button>
+
+    </div>
+
+    <p class="review-note">
+      All 17 reviews above are screenshots of reviews clients published on Google, shown exactly as they wrote them. Tap any one to read it full size. Individual results vary and are not a guarantee of any future outcome.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 7, WHO YOU'LL TALK TO
+     RECO Bulletin 5.1 + 5.2: every agent named in an advertisement
+     must appear under the name registered with RECO (no short forms,
+     no nicknames) with a permitted term. Permitted for a salesperson:
+     salesperson, real estate salesperson, sales representative, real
+     estate agent, real estate sales representative, or REALTOR(R)
+     (CREA members in good standing only).
+     ============================================================ -->
+<section class="agents wrap">
+  <div class="section-head">
+    <h2>Who you'll talk to</h2>
+  </div>
+  <div class="agent-grid">
+    <div class="agent">
+      <div class="name">Emma Pace</div>
+      <div class="term">Sales Representative</div>
+      <div class="firm">Real Broker Ontario Ltd., Brokerage</div>
+    </div>
+    <div class="agent">
+      <div class="name">Amir Moradian</div>
+      <div class="term">Sales Representative</div>
+      <div class="firm">Real Broker Ontario Ltd., Brokerage</div>
+    </div>
+  </div>
+  <div class="cta-repeat">
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+  </div>
+</section>
+
+<!-- sticky booking bar, phones only, appears once past the hero -->
+<div class="stickybar" id="stickyBar" hidden>
+  <a class="cta js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+</div>
+
+<!-- ============================================================
+     SECTION 8, DISCLOSURES
+     The co-branded lockup is the brokerage's own approved mark, so
+     the team and the brokerage carry equal visual weight. If you ever
+     swap in a team-only or personal logo, the brokerage identification
+     must be the SAME SIZE beside it.
+     ============================================================ -->
+<footer class="foot">
+  <div class="wrap">
+    <img class="brand-lockup" src="data:image/webp;base64,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" alt="North Group Real Estate at Real Broker Ontario Ltd., Brokerage" width="340" height="94">
+    <p class="fname">Real Broker Ontario Ltd., Brokerage</p>
+    <p>70 Jutland Road, Unit 16, Toronto, ON M8Z 2G6</p>
+    <p class="fagents">Emma Pace, Sales Representative &middot; Amir Moradian, Sales Representative</p>
+  </div>
+</footer>
+
+<section class="legal">
+  <div class="legal-inner">
+    <p>
+      <strong>Brokerage:</strong> Real Broker Ontario Ltd., Brokerage &middot; 70 Jutland Road, Unit 16, Toronto, ON M8Z 2G6.
+      <strong>Sales Representative:</strong> Emma Pace &middot; <strong>Amir Moradian, Sales Representative</strong>.
+      Monstera Real Estate has officially merged with North Group Real Estate. All trades in real estate are made on behalf of Real Broker Ontario Ltd., Brokerage.
+    </p>
+    <p>
+      This content is for educational purposes only. Not connected with or endorsed by Facebook or Meta. Not intended to solicit buyers or sellers currently under contract with another brokerage.
+    </p>
+    <p>
+      Nothing on this page is an offer of representation, and no agency or client relationship is created by watching the video, submitting the form, or booking a call. A representation agreement is created only by a written agreement signed by you and the brokerage.
+    </p>
+    <p>
+      Reviews are published by clients on Google and are reproduced as written. They reflect those clients' individual experiences and are not a guarantee or prediction of any future result. Property and transaction details are shared only with the written consent of the parties involved.
+    </p>
+    <p>
+      &copy; 2026 Real Broker Ontario Ltd., Brokerage. All rights reserved.
+      <a href="/privacy">Privacy Policy</a> &middot; <a href="/terms">Terms of Service</a>
+    </p>
+  </div>
+</section>
+
+<!-- tap any screenshot to read it full size -->
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close">&times;</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+(function () {
+  var box = document.getElementById('lightbox'),
+      img = document.getElementById('lightboxImg'),
+      shots = document.querySelectorAll('.shot');
+  function open(src, alt) { img.src = src; img.alt = alt; box.hidden = false; document.body.style.overflow = 'hidden'; }
+  function close() { box.hidden = true; img.src = ''; document.body.style.overflow = ''; }
+  shots.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var i = b.querySelector('img');
+      open(b.dataset.src || (i && i.src), i ? i.alt : '');
+    });
+  });
+  box.addEventListener('click', close);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !box.hidden) close(); });
+})();
+</script>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script src="https://embed.typeform.com/next/embed.js"></script>
+<script>
+(function () {
+  var FORM_ID = 'RBHYsHVT';   // the form id, NOT the live-embed id
+  var popup = null;
+  var fallback = document.getElementById('calFallback');
+
+  // Until the real Calendly URL is pasted in, hide the link entirely so no
+  // visitor is ever shown a dead "book directly" link. Replace both
+  // REPLACE- segments in the href above and it appears automatically.
+  var calLink = fallback && fallback.querySelector('a');
+  var calReady = !!(calLink && calLink.href.indexOf('REPLACE-') === -1);
+  if (fallback && !calReady) {
+    fallback.hidden = true;
+    if (window.console) console.warn('[booking] Calendly fallback URL not set yet - link hidden.');
+  }
+
+  // If the Typeform iframe has not finished loading 8s after the popup
+  // opens, promote the direct-to-Calendly link.
+  function watchForStall() {
+    if (!fallback || !calReady) return;
+    var loaded = false, waited = 0;
+    var poll = setInterval(function () {
+      var frame = document.querySelector('.tf-v1-popup iframe');
+      if (frame && !frame.dataset.watched) {
+        frame.dataset.watched = '1';
+        frame.addEventListener('load', function () { loaded = true; });
+      }
+      waited += 500;
+      if (loaded || waited >= 8000) {
+        clearInterval(poll);
+        if (!loaded) fallback.classList.add('is-promoted');
+      }
+    }, 500);
+  }
+
+  document.querySelectorAll('.js-book').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      // If the embed script never loaded, fall through to the plain link.
+      if (!window.tf || !window.tf.createPopup) return;
+      e.preventDefault();
+      if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration' });
+      popup.open();
+      watchForStall();
+    });
+  });
+
+  // Sticky bar (phones only, via CSS): show once past the hero, but hide
+  // while a CTA is on screen so there are never two at once.
+  var bar = document.getElementById('stickyBar');
+  function syncBar() {
+    if (!bar) return;
+    var onScreen = Array.prototype.some.call(document.querySelectorAll('.cta-hero'), function (el) {
+      var r = el.getBoundingClientRect();
+      return r.top < window.innerHeight && r.bottom > 0;
+    });
+    bar.hidden = onScreen || window.scrollY < 300;
+  }
+  ['scroll', 'resize'].forEach(function (evt) {
+    window.addEventListener(evt, function () { requestAnimationFrame(syncBar); }, { passive: true });
+  });
+  syncBar();
+})();
+</script>
+
+</body>
+</html>

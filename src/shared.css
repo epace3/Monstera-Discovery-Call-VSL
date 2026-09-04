@@ -1,0 +1,327 @@
+/* ============================================================
+   MONSTERA VSL FUNNEL - SHARED STYLES
+   Brokerage: Real Broker Ontario Ltd., Brokerage
+   ============================================================ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink:      #101211;
+  --ink-2:    #3d4441;
+  --ink-3:    #6b736f;
+  --ink-4:    #9aa19d;
+  --rule:     #e6e8e7;
+  --rule-2:   #f1f3f2;
+  --paper:    #ffffff;
+  --paper-2:  #fafbfa;
+  --green:    #1a6d4e;
+  --green-d:  #12513a;
+  --green-t:  #eef4f1;
+  --radius:   10px;
+  --wrap:     920px;
+  --narrow:   700px;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap   { max-width: var(--wrap);   margin-inline: auto; padding-inline: 24px; }
+.narrow { max-width: var(--narrow); margin-inline: auto; padding-inline: 24px; }
+
+/* ---------- TYPE ---------- */
+h1 {
+  font-size: clamp(23px, 3.6vw, 33px);
+  font-weight: 800; line-height: 1.16; letter-spacing: -0.8px; color: var(--ink);
+  margin-inline: auto;
+}
+@media (min-width: 700px) { h1 { max-width: 32ch; } }
+h2 { font-size: clamp(20px, 2.8vw, 25px); font-weight: 700; letter-spacing: -0.5px; }
+h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
+.lede { font-size: clamp(16px, 2vw, 18px); color: var(--ink-2); font-weight: 400; }
+
+.eyebrow {
+  font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px;
+  text-transform: uppercase; color: var(--green);
+}
+
+.section-head { text-align: center; margin-bottom: 30px; }
+.section-head h2 { margin-bottom: 8px; }
+.section-head p  { color: var(--ink-3); font-size: 15px; }
+
+/* ---------- HERO ---------- */
+/* ---------- HERO ----------
+   Mobile: single column, video edge to edge for maximum size.
+   Desktop: two columns so the video can be LARGE while the CTA and
+   proof still sit above the fold. Grid areas keep the DOM order
+   (headline, sub, video, CTA, proof) correct for mobile and screen
+   readers while letting desktop place the video in its own column. */
+.hero { padding: 20px 0 16px; text-align: center; }
+.hero-grid {
+  /* STACKED at every width, by design: headline, subheadline, video,
+     social proof bar, button. Never side by side. */
+  display: grid;
+  grid-template-areas: "head" "sub" "vid" "proof" "note" "cta" "ctasub";
+  max-width: 920px; margin-inline: auto; padding-inline: 24px;
+}
+.hero h1        { grid-area: head; margin-bottom: 10px; }
+.hero .lede     { grid-area: sub;  max-width: 560px; margin-inline: auto; margin-bottom: 16px; font-size: 16px; }
+.hero .video-frame { grid-area: vid; }
+.hero .cta-hero { grid-area: cta; justify-self: center; }
+.hero .cta-sub { grid-area: ctasub; }
+.hero .proof    { grid-area: proof; }
+.hero .proof-note { grid-area: note; }
+
+/* video edge to edge on phones: claws back the 48px of side padding */
+@media (max-width: 899px) {
+  .hero-grid > .video-frame { margin-inline: -24px; width: calc(100% + 48px); max-width: none; border-radius: 0; }
+}
+
+
+/* ---------- VIDEO ---------- */
+.video-frame {
+  /* Ratio matches the Vimeo source (65.06% padding = 1.537:1), not 16:9.
+     Height is driven by the viewport so the CTA and proof below it stay
+     above the fold on short laptops as well as phones. */
+  position: relative;
+  aspect-ratio: 10000 / 6506;
+  /* Phones: full available width. Desktop: fills its grid column, with a
+     viewport-height cap so a short laptop can never lose the CTA. */
+  /* Constrain the WIDTH from viewport height, never max-height: capping
+     the height fights aspect-ratio and squashes the video. Deriving width
+     from 48vh keeps the true 1.537:1 ratio AND guarantees the proof bar
+     and button below it stay above the fold on a 720px-tall laptop. */
+  width: min(880px, 100%, calc(48vh * 1.537));
+  height: auto;
+  margin-inline: auto;
+  background: var(--ink); border-radius: var(--radius); overflow: hidden;
+  box-shadow: 0 2px 4px rgba(16,18,17,.04), 0 12px 32px rgba(16,18,17,.09);
+}
+.video-frame iframe, .video-frame video { width: 100%; height: 100%; border: 0; display: block; }
+
+.video-ph {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; color: #fff; background: var(--ink); cursor: pointer;
+}
+.video-ph small { font-size: 12.5px; color: #767c79; max-width: 300px; text-align: center; }
+.play {
+  width: 62px; height: 62px; border-radius: 50%;
+  background: rgba(255,255,255,.10); border: 2px solid rgba(255,255,255,.28);
+  display: flex; align-items: center; justify-content: center;
+}
+.play::after {
+  content: ''; width: 0; height: 0; margin-left: 4px;
+  border-left: 17px solid #fff;
+  border-top: 10.5px solid transparent; border-bottom: 10.5px solid transparent;
+}
+
+/* ---------- BOOKING CTA ---------- */
+.cta {
+  display: inline-block; background: #fff; color: var(--green-d);
+  font-size: clamp(16px, 2.2vw, 18px); font-weight: 800; letter-spacing: -0.2px;
+  text-decoration: none; padding: 18px 40px; border-radius: 10px;
+  box-shadow: 0 2px 0 rgba(0,0,0,.08); transition: transform .15s ease, box-shadow .15s ease;
+  min-height: 56px; line-height: 1.25;
+}
+.cta:hover  { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.18); }
+.cta:active { transform: translateY(0); }
+.cta:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.cta-sub { margin-top: 10px; font-size: 13.5px; color: var(--ink-3); }
+.cta-repeat { text-align: center; margin-top: 26px; }
+
+/* Calendly escape hatch: quiet until it is needed. */
+.cal-fallback[hidden] { display: none !important; }
+.cal-fallback {
+  margin-top: 4px; text-align: center;
+  font-size: 14px; color: var(--ink-4);
+}
+.cal-fallback a { color: var(--ink-3); text-decoration: underline; }
+.cal-fallback a:hover { color: var(--green); }
+
+/* promoted by the 8-second watchdog */
+.cal-fallback.is-promoted {
+  margin-top: 22px; padding: 20px 24px;
+  background: #fff8e6; border: 1px solid #f0d999; border-radius: 10px;
+  font-size: 16px; font-weight: 600; color: #6b4e00;
+}
+.cal-fallback.is-promoted a {
+  display: inline-block; margin-top: 8px;
+  color: #fff; background: var(--green); text-decoration: none;
+  padding: 12px 24px; border-radius: 8px; font-weight: 700;
+}
+.cal-fallback.is-promoted a:hover { background: var(--green-d); color: #fff; }
+
+@media (max-width: 560px) {
+  .cta { display: block; padding: 18px 24px; }
+}
+
+/* sticky booking bar — phones only, so it never covers desktop content */
+.stickybar { display: none; }
+@media (max-width: 760px) {
+  .stickybar {
+    display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 800;
+    background: rgba(255,255,255,.96); backdrop-filter: blur(8px);
+    border-top: 1px solid var(--rule);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+  .stickybar[hidden] { display: none; }
+  .stickybar .cta {
+    display: block; width: 100%; text-align: center;
+    background: var(--green); color: #fff; padding: 16px 20px; font-size: 16px;
+  }
+  .stickybar .cta:hover { background: var(--green-d); transform: none; }
+  /* keep the footer clear of the bar */
+  body { padding-bottom: 84px; }
+}
+
+/* ---------- HERO CTA + PROOF (above the fold) ---------- */
+.cta-hero {
+  margin-top: 16px; background: var(--green); color: #fff;
+  padding: 16px 38px; font-size: 17px; min-height: 54px;
+  box-shadow: 0 2px 4px rgba(16,18,17,.08), 0 8px 22px rgba(26,109,78,.22);
+}
+.cta-hero:hover { background: var(--green-d); color: #fff; }
+
+.proof {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; max-width: 520px; margin: 16px auto 0;
+}
+.proof-item { text-align: center; }
+.proof-item b {
+  display: block; font-size: clamp(21px, 3.4vw, 26px); font-weight: 800;
+  color: var(--ink); line-height: 1.1; letter-spacing: -0.5px;
+}
+.proof-item b i { font-style: normal; color: var(--green); font-size: .72em; margin-left: 1px; }
+.proof-item span {
+  display: block; margin-top: 4px; font-size: 12px; line-height: 1.35; color: var(--ink-3);
+}
+.proof-note {
+  text-align: center; font-size: 10.5px; color: var(--ink-4);
+  margin: 8px auto 0; max-width: 560px; line-height: 1.4;
+}
+@media (max-width: 420px) {
+  .proof-item span { font-size: 11px; }
+}
+
+/* ---------- REVIEWS (actual Google screenshots) ---------- */
+.reviews { background: var(--paper-2); border-block: 1px solid var(--rule-2); padding: 52px 0; }
+
+.review-grid { columns: 1; column-gap: 16px; }
+@media (min-width: 700px)  { .review-grid { columns: 2; } }
+@media (min-width: 1020px) { .review-grid { columns: 3; } }
+
+.shot {
+  display: block; width: 100%; margin: 0 0 16px; padding: 0;
+  border: 0; background: none; cursor: zoom-in;
+  break-inside: avoid; -webkit-column-break-inside: avoid;
+  border-radius: 12px; overflow: hidden; line-height: 0;
+  box-shadow: 0 1px 2px rgba(16,18,17,.06), 0 6px 18px rgba(16,18,17,.08);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.shot:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(16,18,17,.14); }
+.shot:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+.shot img { width: 100%; height: auto; display: block; border-radius: 12px; }
+
+.review-note {
+  text-align: center; font-size: 12px; color: var(--ink-4);
+  margin-top: 26px; max-width: 620px; margin-inline: auto; line-height: 1.65;
+}
+
+/* tap/click to enlarge */
+.lightbox[hidden] { display: none !important; }
+.lightbox {
+  position: fixed; inset: 0; z-index: 900;
+  background: rgba(10,12,11,.92);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; cursor: zoom-out;
+}
+.lightbox img {
+  max-width: min(680px, 100%); max-height: 92vh; width: auto; height: auto;
+  border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+.lightbox-close {
+  position: absolute; top: 14px; right: 16px;
+  width: 42px; height: 42px; border-radius: 50%; border: 0;
+  background: rgba(255,255,255,.14); color: #fff; font-size: 22px;
+  line-height: 1; cursor: pointer;
+}
+.lightbox-close:hover { background: rgba(255,255,255,.24); }
+
+/* ---------- AGENT IDENTIFICATION (RECO 5.1 / 5.2) ---------- */
+.agents { padding: 44px 0; }
+.agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.agent {
+  border: 1px solid var(--rule); border-radius: var(--radius);
+  padding: 20px 22px; background: #fff;
+}
+.agent .name { font-size: 16px; font-weight: 700; color: var(--ink); }
+.agent .term { font-size: 13px; color: var(--green); font-weight: 600; margin-top: 2px; }
+.agent .firm { font-size: 12.5px; color: var(--ink-3); margin-top: 8px; line-height: 1.5; }
+
+/* ---------- FOOTER + COMPLIANCE ---------- */
+.foot { padding: 42px 0 38px; text-align: center; border-top: 1px solid var(--rule); }
+.foot .brand-lockup {
+  /* Official North Group x Real co-branded lockup. Team and brokerage
+     carry equal visual weight in this mark, which is what RECO
+     prominence needs. If you swap in a team-only or personal logo, the
+     brokerage identification must be the SAME SIZE beside it. */
+  height: 46px; width: auto; margin: 0 auto 16px; display: block;
+}
+.foot .fname { font-weight: 700; color: var(--ink); font-size: 15px; margin-bottom: 4px; }
+.foot p { font-size: 13px; color: var(--ink-3); }
+.foot .fagents { margin-top: 12px; font-size: 13px; color: var(--ink-2); }
+
+.legal { background: #f6f7f7; border-top: 1px solid var(--rule); padding: 32px 0 46px; }
+.legal-inner { max-width: 760px; margin-inline: auto; padding-inline: 24px; }
+.legal p {
+  font-size: 11.5px; color: var(--ink-3); line-height: 1.75; margin-bottom: 11px;
+}
+.legal p:first-child { color: var(--ink-2); font-size: 12.5px; }
+.legal strong { color: var(--ink); font-weight: 600; }
+.legal a { color: var(--ink-3); }
+
+/* ---------- UTIL ---------- */
+.pad-lg { padding: 46px 0; }
+.pad-md { padding: 32px 0; }
+
+
+/* ============================================================
+   TYPEFORM POPUP — fallback positioning.
+   Mirrors Typeform's own popup.css. If their stylesheet ever fails
+   to load or moves, these rules still render the popup full-screen
+   instead of leaving an unstyled block behind a locked page.
+   Structure (verified against the live embed):
+     .tf-v1-popup > .tf-v1-spinner + .tf-v1-iframe-wrapper > iframe + .tf-v1-close
+   ============================================================ */
+.tf-v1-popup {
+  position: fixed; inset: 0; z-index: 10001;
+  background: rgba(0, 0, 0, .75);
+  display: flex; align-items: center; justify-content: center;
+}
+.tf-v1-popup .tf-v1-iframe-wrapper {
+  position: relative;
+  width: min(1000px, 96vw);
+  height: min(760px, 92vh);
+  background: #fff; border-radius: 10px; overflow: hidden;
+}
+.tf-v1-popup .tf-v1-iframe-wrapper iframe {
+  width: 100%; height: 100%; border: 0; display: block;
+}
+.tf-v1-popup .tf-v1-close {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  width: 40px; height: 40px; border: 0; border-radius: 50%;
+  background: rgba(0, 0, 0, .06); cursor: pointer;
+}
+@media (max-width: 640px) {
+  .tf-v1-popup .tf-v1-iframe-wrapper {
+    width: 100vw; height: 100dvh; border-radius: 0;
+  }
+}

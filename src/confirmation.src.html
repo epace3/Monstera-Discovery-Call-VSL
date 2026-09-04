@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+__PIXEL_BLOCK__
+
+<title>__PAGE_TITLE__</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+__SHARED_CSS__
+
+/* ---------- CONFIRMATION-ONLY ---------- */
+.tick {
+  width: 46px; height: 46px; margin: 0 auto 14px; border-radius: 50%;
+  background: var(--green); display: flex; align-items: center; justify-content: center;
+}
+.tick svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Reminder to accept the calendar invite: the single biggest lever on
+   show-rate, so it gets a card of its own rather than a line of text. */
+.invite {
+  background: #fff8e6; border: 1px solid #f0d999; border-radius: 12px;
+  padding: 26px 26px 22px; max-width: 560px; margin: 0 auto;
+}
+.invite h2 { font-size: 19px; margin-bottom: 8px; color: #4a3600; }
+.invite p { font-size: 14.5px; color: #6b5200; line-height: 1.6; }
+.invite .details { margin-top: 18px; background: #fff; border-color: #f0d999; }
+
+.details {
+  background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px;
+  padding: 6px 18px; max-width: 560px; margin: 0 auto; text-align: left;
+}
+.details-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 11px 0; border-bottom: 1px solid var(--rule-2);
+}
+.details-row:last-child { border-bottom: 0; }
+.details-row dt { font-size: 13px; color: var(--ink-3); font-weight: 500; }
+.details-row dd { font-size: 14px; color: var(--ink); font-weight: 700; text-align: right; }
+.details-row dd.free { color: var(--green); }
+
+/* Questions you might have: the breakout videos live here. */
+.q-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.q-card {
+  border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; background: #fff;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.q-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(16,18,17,.07); }
+.q-thumb {
+  position: relative; aspect-ratio: 10000 / 6506; background: var(--ink);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.q-thumb iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.q-thumb .play { width: 44px; height: 44px; }
+.q-thumb .play::after { border-left-width: 12px; border-top-width: 7.5px; border-bottom-width: 7.5px; }
+.q-thumb .dur {
+  position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,.72);
+  color: #fff; font-size: 11.5px; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+}
+.q-body { padding: 18px; }
+.q-body h3 { margin-bottom: 6px; font-size: 15.5px; line-height: 1.35; }
+.q-body p { font-size: 13.5px; color: var(--ink-3); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SECTIONS 1-2, ABOVE THE FOLD
+     Headline then video. Same standard as the registration page:
+     both visible without scrolling, desktop and mobile.
+     ============================================================ -->
+<section class="hero narrow">
+  <div class="tick"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+
+  <!-- 1. HEADLINE -->
+  <h1>You're in. Watch this before we talk.</h1>
+  <p class="lede">80 seconds now makes the 15 minutes actually useful.</p>
+
+  <!-- 2. VIDEO. Vimeo 1223856186 "Your Call Is Booked" -->
+  <div class="video-frame">
+    <iframe src="https://player.vimeo.com/video/1223856186?h=fe7d259e05&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            title="Your Call Is Booked"></iframe>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 3, ACCEPT YOUR CALENDAR INVITE
+     Highest-leverage block on this page for show-rate. Keep it
+     visually loud and keep it above the breakout videos.
+     ============================================================ -->
+<section class="narrow pad-lg">
+  <div class="invite">
+    <h2>One thing: accept your calendar invite.</h2>
+    <p>It is in your inbox now. Accepting it puts the call on your calendar with the Zoom link attached, so nothing gets lost and you get the reminder. If you cannot find it, check spam or promotions.</p>
+    <dl class="details">
+      <div class="details-row"><dt>Your call</dt><dd id="callDate">Check your email for the time</dd></div>
+      <div class="details-row"><dt>Format</dt><dd>Zoom (link in your invite)</dd></div>
+      <div class="details-row"><dt>Length</dt><dd>15 minutes</dd></div>
+      <div class="details-row"><dt>Cost</dt><dd class="free">Free, no obligation</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 4, QUESTIONS YOU MIGHT HAVE BEFORE OUR CALL
+     The breakout videos go here, one per question.
+
+     TO ADD A CLIP: replace the .q-thumb contents with the Vimeo
+     iframe (same attributes as the hero video), set the duration,
+     and write the question as the h3. Delete any card you do not
+     have a clip for rather than leaving an empty placeholder live.
+     ============================================================ -->
+<section class="wrap pad-lg">
+  <div class="section-head">
+    <h2>Questions you might have before our call</h2>
+    <p>Short answers to the things most people ask first.</p>
+  </div>
+  <div class="q-grid">
+
+    <article class="q-card">
+      <div class="q-thumb"><div class="play"></div><span class="dur">2:30</span></div>
+      <div class="q-body">
+        <h3>Why does 60-day sold data matter more than a list price?</h3>
+        <p>What we will pull up on the call, and why it changes the conversation.</p>
+      </div>
+    </article>
+
+    <article class="q-card">
+      <div class="q-thumb"><div class="play"></div><span class="dur">3:00</span></div>
+      <div class="q-body">
+        <h3>How does the math work if I am selling and buying?</h3>
+        <p>What happens when your home is down but the one you are buying is down further.</p>
+      </div>
+    </article>
+
+    <article class="q-card">
+      <div class="q-thumb"><div class="play"></div><span class="dur">2:00</span></div>
+      <div class="q-body">
+        <h3>What actually happens on the call?</h3>
+        <p>So you know exactly what to expect and what to bring.</p>
+      </div>
+    </article>
+
+    <article class="q-card">
+      <div class="q-thumb"><div class="play"></div><span class="dur">1:30</span></div>
+      <div class="q-body">
+        <h3>I am already working with an agent. Should I still come?</h3>
+        <p>If you are under a representation agreement, please keep working with your brokerage. Here is what this call can and cannot be.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     DISCLOSURES
+     The co-branded lockup is the brokerage's own approved mark, so
+     team and brokerage carry equal visual weight. If you ever swap in
+     a team-only or personal logo, the brokerage identification must
+     be the SAME SIZE beside it.
+     ============================================================ -->
+<footer class="foot">
+  <div class="wrap">
+    <img class="brand-lockup" src="__NG_LOGO__" alt="North Group Real Estate at Real Broker Ontario Ltd., Brokerage" width="340" height="94">
+    <p class="fname">Real Broker Ontario Ltd., Brokerage</p>
+    <p>70 Jutland Road, Unit 16, Toronto, ON M8Z 2G6</p>
+    <p class="fagents">Emma Pace, Sales Representative &middot; Amir Moradian, Sales Representative</p>
+  </div>
+</footer>
+
+<section class="legal">
+  <div class="legal-inner">
+    <p>
+      <strong>Brokerage:</strong> Real Broker Ontario Ltd., Brokerage &middot; 70 Jutland Road, Unit 16, Toronto, ON M8Z 2G6.
+      <strong>Sales Representative:</strong> Emma Pace &middot; <strong>Amir Moradian, Sales Representative</strong>.
+      Monstera Real Estate has officially merged with North Group Real Estate. All trades in real estate are made on behalf of Real Broker Ontario Ltd., Brokerage.
+    </p>
+    <p>
+      This content is for educational purposes only. Not connected with or endorsed by Facebook or Meta. Not intended to solicit buyers or sellers currently under contract with another brokerage.
+    </p>
+    <p>
+      Nothing on this page is an offer of representation, and no agency or client relationship is created by booking or attending a call. A representation agreement is created only by a written agreement signed by you and the brokerage.
+    </p>
+    <p>
+      &copy; 2026 Real Broker Ontario Ltd., Brokerage. All rights reserved.
+      <a href="/privacy">Privacy Policy</a> &middot; <a href="/terms">Terms of Service</a>
+    </p>
+  </div>
+</section>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+
+<script>
+// Calendly passes the booked time back on the redirect as query params.
+// Turn on "Pass event details to your redirect page" in the Calendly event.
+(function () {
+  var p = new URLSearchParams(location.search);
+  var start = p.get('event_start_time');
+  if (!start) return;
+  var d = new Date(start);
+  if (isNaN(d)) return;
+  document.getElementById('callDate').textContent = d.toLocaleString('en-CA', {
+    weekday: 'short', month: 'short', day: 'numeric',
+    hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+  });
+})();
+</script>
+
+__SCHEDULE_BLOCK__
+
+</body>
+</html>

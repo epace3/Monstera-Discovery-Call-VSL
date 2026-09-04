@@ -1,0 +1,7 @@
+.DS_Store
+__pycache__/
+*.pyc
+# build output produced inside src/ by build.py; the published copies live in site/
+src/vsl_registration_page.html
+src/vsl_confirmation_qualified.html
+src/vsl_confirmation_unqualified.html

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ============================================================
+     META PIXEL - base code. Pixel ID 1828499953929219.
+     NO conversion event fires on this page by design: audience
+     collection only. The Schedule event lives on the confirmation
+     page. PageView is part of the standard base snippet and is what
+     builds the retargeting audience; it is not a conversion event.
+     ============================================================ -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1828499953929219');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1828499953929219&ev=PageView&noscript=1" alt=""/></noscript>
+<!-- End Meta Pixel Code -->
+
+<title>Before You List Your Toronto Home | North Group Real Estate</title>
+<meta name="description" content="See what actually sold in your Toronto area in the last 60 days. Book a free 15-minute call with a sales representative at Real Broker Ontario Ltd., Brokerage.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+__SHARED_CSS__
+</style>
+
+<!-- ============================================================
+     Typeform popup stylesheet - REQUIRED, do not remove.
+     embed.js only injects this automatically when the page also has
+     an inline widget (data-tf-live). On a popup-only page it does
+     not, so the popup renders as an unstyled block in normal flow
+     while Typeform still sets body{overflow:hidden}: the page then
+     looks frozen and the form never appears.
+     ============================================================ -->
+<link rel="stylesheet" href="https://embed.typeform.com/next/css/popup.css">
+</head>
+<body>
+
+<!-- ============================================================
+     SECTIONS 1-5, ABOVE THE FOLD
+     Fixed order: headline, subheadline, video, social proof bar,
+     book-a-call button. All five must be visible without scrolling
+     on desktop AND mobile. Run audit_funnel_page.py before shipping.
+     No top banner on this page by design.
+     ============================================================ -->
+<section class="hero">
+  <div class="hero-grid">
+
+    <!-- 1. HEADLINE -->
+    <h1>Before you list your Toronto home, see what actually sold in your area in the last 60 days.</h1>
+
+    <!-- 2. SUBHEADLINE -->
+    <p class="lede">A free 15-minute call. No listing agreement, no obligation.</p>
+
+    <!-- 3. VIDEO. Vimeo 1223856193. Source ratio 65.06% = 1.537:1, not 16:9.
+         Desktop: its own column so it can be large without pushing the
+         button below the fold. Mobile: full width, edge to edge. -->
+    <div class="video-frame">
+      <iframe src="https://player.vimeo.com/video/1223856193?h=f7d4df9aa8&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              title="Watch This If You're Thinking Of Moving In Toronto..."></iframe>
+    </div>
+
+    <!-- 4. SOCIAL PROOF BAR
+         RECO Bulletin 5.1: volume/activity claims must explain how they
+         were measured, and a TEAM achievement must be identified as one
+         with the team size stated. The note below does that. Do not
+         delete it; refresh the "as of" date whenever figures change. -->
+    <div class="proof">
+      <div class="proof-item"><b>23</b><span>Sales representatives servicing the GTA</span></div>
+      <div class="proof-item"><b>518</b><span>Google reviews</span></div>
+      <div class="proof-item"><b>4.9<i>&#9733;</i></b><span>Average rating</span></div>
+    </div>
+    <p class="proof-note">Statistics across our team, North Group Real Estate, at Real Broker Ontario Ltd., Brokerage. As of September 2026.</p>
+
+    <!-- 5. BOOK A CALL BUTTON
+         A real link to the hosted form. JS upgrades it to the Typeform
+         popup; if the embed script is blocked the link still books.
+         NOTE: Typeform's UI gives a LIVE id (01M1JAFJDTJE6GB8G1T7S38G3A).
+         The popup API does NOT resolve live ids. Use the FORM id. -->
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+    <p class="cta-sub">Takes about 90 seconds. You pick your own time at the end.</p>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     CALENDLY FALLBACK
+     The calendar loads inside Typeform, which loads inside this page.
+     Typeform documents that the Calendly step can fail to respond on
+     mobile because of that nesting, so this is the escape hatch.
+     Understated by default; the watchdog promotes it if the form has
+     not loaded 8 seconds after someone opens it.
+     ============================================================ -->
+<div class="wrap">
+  <p class="cal-fallback" id="calFallback">
+    Having trouble loading the calendar?
+    <a href="https://calendly.com/REPLACE-USERNAME/REPLACE-EVENT-SLUG" target="_blank" rel="noopener">Click here to book directly.</a>
+  </p>
+</div>
+
+<!-- ============================================================
+     SECTION 6, TESTIMONIALS
+     Real Google review screenshots, shown exactly as clients posted
+     them. Never paraphrase a review or add an outcome the reviewer
+     did not write: RECO Bulletin 5.1 prohibits false, misleading or
+     inaccurate statements, and a testimonial represents that the
+     client actually said those words.
+     ============================================================ -->
+<section class="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>What clients have said</h2>
+      <p>Real reviews from Google, exactly as clients posted them.</p>
+    </div>
+
+    <div class="review-grid">
+
+__REVIEWS__
+
+    </div>
+
+    <p class="review-note">
+      All __REVIEW_COUNT__ reviews above are screenshots of reviews clients published on Google, shown exactly as they wrote them. Tap any one to read it full size. Individual results vary and are not a guarantee of any future outcome.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 7, WHO YOU'LL TALK TO
+     RECO Bulletin 5.1 + 5.2: every agent named in an advertisement
+     must appear under the name registered with RECO (no short forms,
+     no nicknames) with a permitted term. Permitted for a salesperson:
+     salesperson, real estate salesperson, sales representative, real
+     estate agent, real estate sales representative, or REALTOR(R)
+     (CREA members in good standing only).
+     ============================================================ -->
+<section class="agents wrap">
+  <div class="section-head">
+    <h2>Who you'll talk to</h2>
+  </div>
+  <div class="agent-grid">
+    <div class="agent">
+      <div class="name">Emma Pace</div>
+      <div class="term">Sales Representative</div>
+      <div class="firm">Real Broker Ontario Ltd., Brokerage</div>
+    </div>
+    <div class="agent">
+      <div class="name">Amir Moradian</div>
+      <div class="term">Sales Representative</div>
+      <div class="firm">Real Broker Ontario Ltd., Brokerage</div>
+    </div>
+  </div>
+  <div class="cta-repeat">
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+  </div>
+</section>
+
+<!-- sticky booking bar, phones only, appears once past the hero -->
+<div class="stickybar" id="stickyBar" hidden>
+  <a class="cta js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+</div>
+
+<!-- ============================================================
+     SECTION 8, DISCLOSURES
+     The co-branded lockup is the brokerage's own approved mark, so
+     the team and the brokerage carry equal visual weight. If you ever
+     swap in a team-only or personal logo, the brokerage identification
+     must be the SAME SIZE beside it.
+     ============================================================ -->
+<footer class="foot">
+  <div class="wrap">
+    <img class="brand-lockup" src="__NG_LOGO__" alt="North Group Real Estate at Real Broker Ontario Ltd., Brokerage" width="340" height="94">
+    <p class="fname">Real Broker Ontario Ltd., Brokerage</p>
+    <p>70 Jutland Road, Unit 16, Toronto, ON M8Z 2G6</p>
+    <p class="fagents">Emma Pace, Sales Representative &middot; Amir Moradian, Sales Representative</p>
+  </div>
+</footer>
+
+<section class="legal">
+  <div class="legal-inner">
+    <p>
+      <strong>Brokerage:</strong> Real Broker Ontario Ltd., Brokerage &middot; 70 Jutland Road, Unit 16, Toronto, ON M8Z 2G6.
+      <strong>Sales Representative:</strong> Emma Pace &middot; <strong>Amir Moradian, Sales Representative</strong>.
+      Monstera Real Estate has officially merged with North Group Real Estate. All trades in real estate are made on behalf of Real Broker Ontario Ltd., Brokerage.
+    </p>
+    <p>
+      This content is for educational purposes only. Not connected with or endorsed by Facebook or Meta. Not intended to solicit buyers or sellers currently under contract with another brokerage.
+    </p>
+    <p>
+      Nothing on this page is an offer of representation, and no agency or client relationship is created by watching the video, submitting the form, or booking a call. A representation agreement is created only by a written agreement signed by you and the brokerage.
+    </p>
+    <p>
+      Reviews are published by clients on Google and are reproduced as written. They reflect those clients' individual experiences and are not a guarantee or prediction of any future result. Property and transaction details are shared only with the written consent of the parties involved.
+    </p>
+    <p>
+      &copy; 2026 Real Broker Ontario Ltd., Brokerage. All rights reserved.
+      <a href="/privacy">Privacy Policy</a> &middot; <a href="/terms">Terms of Service</a>
+    </p>
+  </div>
+</section>
+
+<!-- tap any screenshot to read it full size -->
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close">&times;</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+(function () {
+  var box = document.getElementById('lightbox'),
+      img = document.getElementById('lightboxImg'),
+      shots = document.querySelectorAll('.shot');
+  function open(src, alt) { img.src = src; img.alt = alt; box.hidden = false; document.body.style.overflow = 'hidden'; }
+  function close() { box.hidden = true; img.src = ''; document.body.style.overflow = ''; }
+  shots.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var i = b.querySelector('img');
+      open(b.dataset.src || (i && i.src), i ? i.alt : '');
+    });
+  });
+  box.addEventListener('click', close);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !box.hidden) close(); });
+})();
+</script>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script src="https://embed.typeform.com/next/embed.js"></script>
+<script>
+(function () {
+  var FORM_ID = 'RBHYsHVT';   // the form id, NOT the live-embed id
+  var popup = null;
+  var fallback = document.getElementById('calFallback');
+
+  // Until the real Calendly URL is pasted in, hide the link entirely so no
+  // visitor is ever shown a dead "book directly" link. Replace both
+  // REPLACE- segments in the href above and it appears automatically.
+  var calLink = fallback && fallback.querySelector('a');
+  var calReady = !!(calLink && calLink.href.indexOf('REPLACE-') === -1);
+  if (fallback && !calReady) {
+    fallback.hidden = true;
+    if (window.console) console.warn('[booking] Calendly fallback URL not set yet - link hidden.');
+  }
+
+  // If the Typeform iframe has not finished loading 8s after the popup
+  // opens, promote the direct-to-Calendly link.
+  function watchForStall() {
+    if (!fallback || !calReady) return;
+    var loaded = false, waited = 0;
+    var poll = setInterval(function () {
+      var frame = document.querySelector('.tf-v1-popup iframe');
+      if (frame && !frame.dataset.watched) {
+        frame.dataset.watched = '1';
+        frame.addEventListener('load', function () { loaded = true; });
+      }
+      waited += 500;
+      if (loaded || waited >= 8000) {
+        clearInterval(poll);
+        if (!loaded) fallback.classList.add('is-promoted');
+      }
+    }, 500);
+  }
+
+  document.querySelectorAll('.js-book').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      // If the embed script never loaded, fall through to the plain link.
+      if (!window.tf || !window.tf.createPopup) return;
+      e.preventDefault();
+      if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration' });
+      popup.open();
+      watchForStall();
+    });
+  });
+
+  // Sticky bar (phones only, via CSS): show once past the hero, but hide
+  // while a CTA is on screen so there are never two at once.
+  var bar = document.getElementById('stickyBar');
+  function syncBar() {
+    if (!bar) return;
+    var onScreen = Array.prototype.some.call(document.querySelectorAll('.cta-hero'), function (el) {
+      var r = el.getBoundingClientRect();
+      return r.top < window.innerHeight && r.bottom > 0;
+    });
+    bar.hidden = onScreen || window.scrollY < 300;
+  }
+  ['scroll', 'resize'].forEach(function (evt) {
+    window.addEventListener(evt, function () { requestAnimationFrame(syncBar); }, { passive: true });
+  });
+  syncBar();
+})();
+</script>
+
+</body>
+</html>
