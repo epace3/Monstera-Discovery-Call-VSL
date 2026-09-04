@@ -557,13 +557,24 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 <script>
 (function () {
   if (typeof fbq !== 'function') return;
+
+  // The booking happens inside Calendly's iframe inside Typeform's iframe, so this
+  // page cannot observe it directly. It does not need to: Ending B is only reachable
+  // through the required Calendly question, so landing here means a booking happened.
+  // Guarded so a refresh or a back-button return cannot fire it twice.
+  var KEY = 'mdhb_schedule_fired';
+  try {
+    if (sessionStorage.getItem(KEY)) return;
+    sessionStorage.setItem(KEY, '1');
+  } catch (e) { /* private mode: storage unavailable, fire once and move on */ }
+
   var p = new URLSearchParams(window.location.search);
   var inviteeId = p.get('invitee_uuid') || p.get('invitee_id');
-  // No id means no dedupe key. Fire nothing and let the server-side CAPI
-  // event be the single report. Firing without an id double-counts;
-  // firing nothing loses nothing.
-  if (!inviteeId) return;
-  fbq('track', 'Schedule', {}, { eventID: inviteeId });
+  if (inviteeId) {
+    fbq('track', 'Schedule', {}, { eventID: inviteeId });
+  } else {
+    fbq('track', 'Schedule');
+  }
 })();
 </script>
 

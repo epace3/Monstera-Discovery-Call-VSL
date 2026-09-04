@@ -100,13 +100,19 @@ def audit(path, page_type):
             check(tracked == ["PageView"], "registration fires PageView only, no conversion",
                   f"found {tracked}")
         else:
-            check(tracked.count("Schedule") == 1, "qualified page fires exactly one Schedule",
-                  f"found {tracked}")
+            # The if/else gives two literal Schedule calls, one per branch, and
+            # exactly one runs. A third would mean a duplicated block.
+            check(html.count("fbq('track', 'Schedule'") == 2,
+                  "exactly the two Schedule branches present, no duplicated block",
+                  f"found {html.count(chr(102)+chr(98)+chr(113)+chr(40)+chr(39)+'track'+chr(39)+', '+chr(39)+'Schedule'+chr(39))}")
             check("eventID" in html, "Schedule carries an eventID for CAPI deduplication")
-            # A Schedule with no id cannot deduplicate against the server-side
-            # CAPI event, so the browser must stay silent when the id is absent.
-            check(re.search(r"if \(!inviteeId\) return;", html),
-                  "no Schedule is fired when invitee_uuid is absent")
+            # The Schedule fires on arrival whether or not the invitee id is
+            # present, so the only thing standing between a refresh and a double
+            # count is the sessionStorage guard. It must be there.
+            check("mdhb_schedule_fired" in html,
+                  "Schedule is guarded against firing twice in one tab")
+            check(re.search(r"sessionStorage\.setItem", html),
+                  "the repeat-fire guard writes its flag")
 
     # The confirmation pages describe a 15-minute outbound PHONE call.
     # zoom-in / zoom-out are CSS cursor keywords, not a reference to Zoom.

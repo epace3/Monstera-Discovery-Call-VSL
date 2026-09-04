@@ -57,20 +57,39 @@ NO_PIXEL_BLOCK = '''<!-- No analytics on this page by design. -->'''
 # Calendly's invitee UUID as the eventID; the GHL CAPI call must send that same
 # UUID as its event_id.
 #
-# If the UUID is missing there is no dedupe key, so this fires NOTHING and lets
-# the server-side event be the single report. Firing without an id double-counts;
-# firing nothing loses nothing. (Turn on "Pass event details to your redirect
-# page" in the Calendly event so the UUID actually arrives.)
+# When the UUID is present the browser event carries it as eventID and
+# deduplicates cleanly. When it is absent the event still fires, because landing
+# on this page means a booking happened and Emma would rather report it than lose
+# it. A sessionStorage guard stops a refresh or a back-button return firing a
+# second time in the same tab.
+#
+# OPEN RISK, flagged to Emma Sept 2026: the guard is per-tab. It does NOT
+# deduplicate the browser event against the server-side CAPI event, which is a
+# different source. While "Pass event details to your redirect page" is OFF in
+# the Calendly event, a booking with no invitee_uuid is reported twice: once by
+# the browser with no eventID and once by CAPI. Turning that setting ON is what
+# actually closes this.
 SCHEDULE_BLOCK = '''<script>
 (function () {
   if (typeof fbq !== 'function') return;
+
+  // The booking happens inside Calendly's iframe inside Typeform's iframe, so this
+  // page cannot observe it directly. It does not need to: Ending B is only reachable
+  // through the required Calendly question, so landing here means a booking happened.
+  // Guarded so a refresh or a back-button return cannot fire it twice.
+  var KEY = 'mdhb_schedule_fired';
+  try {
+    if (sessionStorage.getItem(KEY)) return;
+    sessionStorage.setItem(KEY, '1');
+  } catch (e) { /* private mode: storage unavailable, fire once and move on */ }
+
   var p = new URLSearchParams(window.location.search);
   var inviteeId = p.get('invitee_uuid') || p.get('invitee_id');
-  // No id means no dedupe key. Fire nothing and let the server-side CAPI
-  // event be the single report. Firing without an id double-counts;
-  // firing nothing loses nothing.
-  if (!inviteeId) return;
-  fbq('track', 'Schedule', {}, { eventID: inviteeId });
+  if (inviteeId) {
+    fbq('track', 'Schedule', {}, { eventID: inviteeId });
+  } else {
+    fbq('track', 'Schedule');
+  }
 })();
 </script>'''
 
@@ -125,8 +144,16 @@ for src, out, needs_reviews, pixel, schedule, title in TARGETS:
     if 'unqualified' in out or 'registration' in out:
         assert tracked == ['PageView'], f'{out} must fire PageView only, found {tracked}'
     else:
-        assert tracked == ['PageView', 'Schedule'], f'{out} must fire PageView then Schedule, found {tracked}'
-        assert 'eventID' in h, f'{out} Schedule must carry an eventID'
+        # Two literal Schedule calls appear in the source: the if/else branches
+        # for "invitee id present" and "absent". Exactly one RUNS. Counting text
+        # occurrences cannot tell you that, so this asserts the shape of the
+        # block and the live runtime test proves the count.
+        assert tracked[0] == 'PageView', f'{out} must fire PageView first, found {tracked}'
+        assert set(tracked) == {'PageView', 'Schedule'}, f'{out} fires unexpected events: {tracked}'
+        n = h.count("fbq('track', 'Schedule'")
+        assert n == 2, f'{out} should hold exactly the two Schedule branches, found {n}'
+        assert 'eventID' in h, f'{out} Schedule must carry an eventID when the invitee id is present'
+        assert 'mdhb_schedule_fired' in h, f'{out} Schedule is missing the repeat-fire guard'
     # The confirmation pages describe a phone call, never a video meeting.
     # 'zoom-in' / 'zoom-out' are CSS cursor keywords in shared.css, not a
     # reference to Zoom, so they are excluded rather than renamed.
