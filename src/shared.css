@@ -137,28 +137,6 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 .cta-sub { margin-top: 10px; font-size: 13.5px; color: var(--ink-3); }
 .cta-repeat { text-align: center; margin-top: 26px; }
 
-/* Calendly escape hatch: quiet until it is needed. */
-.cal-fallback[hidden] { display: none !important; }
-.cal-fallback {
-  margin-top: 4px; text-align: center;
-  font-size: 14px; color: var(--ink-4);
-}
-.cal-fallback a { color: var(--ink-3); text-decoration: underline; }
-.cal-fallback a:hover { color: var(--green); }
-
-/* promoted by the 8-second watchdog */
-.cal-fallback.is-promoted {
-  margin-top: 22px; padding: 20px 24px;
-  background: #fff8e6; border: 1px solid #f0d999; border-radius: 10px;
-  font-size: 16px; font-weight: 600; color: #6b4e00;
-}
-.cal-fallback.is-promoted a {
-  display: inline-block; margin-top: 8px;
-  color: #fff; background: var(--green); text-decoration: none;
-  padding: 12px 24px; border-radius: 8px; font-weight: 700;
-}
-.cal-fallback.is-promoted a:hover { background: var(--green-d); color: #fff; }
-
 @media (max-width: 560px) {
   .cta { display: block; padding: 18px 24px; }
 }

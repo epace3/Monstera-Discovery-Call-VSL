@@ -98,20 +98,6 @@ __SHARED_CSS__
   </div>
 </section>
 
-<!-- ============================================================
-     CALENDLY FALLBACK
-     The calendar loads inside Typeform, which loads inside this page.
-     Typeform documents that the Calendly step can fail to respond on
-     mobile because of that nesting, so this is the escape hatch.
-     Understated by default; the watchdog promotes it if the form has
-     not loaded 8 seconds after someone opens it.
-     ============================================================ -->
-<div class="wrap">
-  <p class="cal-fallback" id="calFallback">
-    Having trouble loading the calendar?
-    <a href="https://calendly.com/emma-northgroup/15-minute-call" target="_blank" rel="noopener">Click here to book directly.</a>
-  </p>
-</div>
 
 <!-- ============================================================
      SECTION 6, TESTIMONIALS
@@ -244,36 +230,14 @@ __REVIEWS__
 (function () {
   var FORM_ID = 'RBHYsHVT';   // the form id, NOT the live-embed id
   var popup = null;
-  var fallback = document.getElementById('calFallback');
 
-  // Until the real Calendly URL is pasted in, hide the link entirely so no
-  // visitor is ever shown a dead "book directly" link. Replace both
-  // REPLACE- segments in the href above and it appears automatically.
-  var calLink = fallback && fallback.querySelector('a');
-  var calReady = !!(calLink && calLink.href.indexOf('REPLACE-') === -1);
-  if (fallback && !calReady) {
-    fallback.hidden = true;
-    if (window.console) console.warn('[booking] Calendly fallback URL not set yet - link hidden.');
-  }
-
-  // If the Typeform iframe has not finished loading 8s after the popup
-  // opens, promote the direct-to-Calendly link.
-  function watchForStall() {
-    if (!fallback || !calReady) return;
-    var loaded = false, waited = 0;
-    var poll = setInterval(function () {
-      var frame = document.querySelector('.tf-v1-popup iframe');
-      if (frame && !frame.dataset.watched) {
-        frame.dataset.watched = '1';
-        frame.addEventListener('load', function () { loaded = true; });
-      }
-      waited += 500;
-      if (loaded || waited >= 8000) {
-        clearInterval(poll);
-        if (!loaded) fallback.classList.add('is-promoted');
-      }
-    }, 500);
-  }
+  // NO DIRECT-TO-CALENDLY LINK ON THIS PAGE, DELIBERATELY.
+  // A link straight to the calendar skips the Typeform, which means no
+  // qualification answers and no routing, so the lead lands on Emma's personal
+  // calendar unqualified and the confirmation page cannot tell which one to
+  // show. Losing a booking to a broken embed is cheaper than taking one blind.
+  // The .js-book anchors keep a real href to the Typeform itself, so if the
+  // embed script never loads the click still reaches the qualified form.
 
   document.querySelectorAll('.js-book').forEach(function (a) {
     a.addEventListener('click', function (e) {
@@ -282,7 +246,6 @@ __REVIEWS__
       e.preventDefault();
       if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration' });
       popup.open();
-      watchForStall();
     });
   });
 

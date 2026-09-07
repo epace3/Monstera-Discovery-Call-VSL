@@ -172,28 +172,6 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 .cta-sub { margin-top: 10px; font-size: 13.5px; color: var(--ink-3); }
 .cta-repeat { text-align: center; margin-top: 26px; }
 
-/* Calendly escape hatch: quiet until it is needed. */
-.cal-fallback[hidden] { display: none !important; }
-.cal-fallback {
-  margin-top: 4px; text-align: center;
-  font-size: 14px; color: var(--ink-4);
-}
-.cal-fallback a { color: var(--ink-3); text-decoration: underline; }
-.cal-fallback a:hover { color: var(--green); }
-
-/* promoted by the 8-second watchdog */
-.cal-fallback.is-promoted {
-  margin-top: 22px; padding: 20px 24px;
-  background: #fff8e6; border: 1px solid #f0d999; border-radius: 10px;
-  font-size: 16px; font-weight: 600; color: #6b4e00;
-}
-.cal-fallback.is-promoted a {
-  display: inline-block; margin-top: 8px;
-  color: #fff; background: var(--green); text-decoration: none;
-  padding: 12px 24px; border-radius: 8px; font-weight: 700;
-}
-.cal-fallback.is-promoted a:hover { background: var(--green-d); color: #fff; }
-
 @media (max-width: 560px) {
   .cta { display: block; padding: 18px 24px; }
 }
@@ -425,20 +403,6 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
   </div>
 </section>
 
-<!-- ============================================================
-     CALENDLY FALLBACK
-     The calendar loads inside Typeform, which loads inside this page.
-     Typeform documents that the Calendly step can fail to respond on
-     mobile because of that nesting, so this is the escape hatch.
-     Understated by default; the watchdog promotes it if the form has
-     not loaded 8 seconds after someone opens it.
-     ============================================================ -->
-<div class="wrap">
-  <p class="cal-fallback" id="calFallback">
-    Having trouble loading the calendar?
-    <a href="https://calendly.com/emma-northgroup/15-minute-call" target="_blank" rel="noopener">Click here to book directly.</a>
-  </p>
-</div>
 
 <!-- ============================================================
      SECTION 6, TESTIMONIALS
@@ -654,36 +618,14 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 (function () {
   var FORM_ID = 'RBHYsHVT';   // the form id, NOT the live-embed id
   var popup = null;
-  var fallback = document.getElementById('calFallback');
 
-  // Until the real Calendly URL is pasted in, hide the link entirely so no
-  // visitor is ever shown a dead "book directly" link. Replace both
-  // REPLACE- segments in the href above and it appears automatically.
-  var calLink = fallback && fallback.querySelector('a');
-  var calReady = !!(calLink && calLink.href.indexOf('REPLACE-') === -1);
-  if (fallback && !calReady) {
-    fallback.hidden = true;
-    if (window.console) console.warn('[booking] Calendly fallback URL not set yet - link hidden.');
-  }
-
-  // If the Typeform iframe has not finished loading 8s after the popup
-  // opens, promote the direct-to-Calendly link.
-  function watchForStall() {
-    if (!fallback || !calReady) return;
-    var loaded = false, waited = 0;
-    var poll = setInterval(function () {
-      var frame = document.querySelector('.tf-v1-popup iframe');
-      if (frame && !frame.dataset.watched) {
-        frame.dataset.watched = '1';
-        frame.addEventListener('load', function () { loaded = true; });
-      }
-      waited += 500;
-      if (loaded || waited >= 8000) {
-        clearInterval(poll);
-        if (!loaded) fallback.classList.add('is-promoted');
-      }
-    }, 500);
-  }
+  // NO DIRECT-TO-CALENDLY LINK ON THIS PAGE, DELIBERATELY.
+  // A link straight to the calendar skips the Typeform, which means no
+  // qualification answers and no routing, so the lead lands on Emma's personal
+  // calendar unqualified and the confirmation page cannot tell which one to
+  // show. Losing a booking to a broken embed is cheaper than taking one blind.
+  // The .js-book anchors keep a real href to the Typeform itself, so if the
+  // embed script never loads the click still reaches the qualified form.
 
   document.querySelectorAll('.js-book').forEach(function (a) {
     a.addEventListener('click', function (e) {
@@ -692,7 +634,6 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
       e.preventDefault();
       if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration' });
       popup.open();
-      watchForStall();
     });
   });
 
