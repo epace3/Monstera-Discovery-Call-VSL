@@ -31,7 +31,13 @@ src="https://www.facebook.com/tr?id=1828499953929219&ev=PageView&noscript=1" alt
 <meta name="description" content="See what actually sold in your Toronto area in the last 60 days. Book a free 15-minute call with a sales representative at Real Broker Ontario Ltd., Brokerage.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- Fonts must not block first paint. display=swap is already on the URL, so
+     text paints immediately in the fallback and swaps to Inter when it lands.
+     preload starts the download at normal priority; the media=print stylesheet
+     applies it without blocking render; noscript covers JS-off. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"></noscript>
 <link rel="preconnect" href="https://player.vimeo.com">
 <link rel="preconnect" href="https://embed.typeform.com">
 <style>

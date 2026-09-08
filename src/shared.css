@@ -1,3 +1,12 @@
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Roboto');
+  size-adjust: 107%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
 /* ============================================================
    MONSTERA VSL FUNNEL - SHARED STYLES
    Brokerage: Real Broker Ontario Ltd., Brokerage
@@ -25,7 +34,7 @@
 html { -webkit-text-size-adjust: 100%; }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--paper);
   color: var(--ink);
   line-height: 1.6;
@@ -72,7 +81,13 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
   max-width: 920px; margin-inline: auto; padding-inline: 24px;
 }
 .hero h1        { grid-area: head; margin-bottom: 10px; }
-.hero .lede     { grid-area: sub;  max-width: 560px; margin-inline: auto; margin-bottom: 16px; font-size: 16px; }
+/* The subheadline must sit on ONE line on desktop. It was wrapping because
+   max-width capped it at 560px and the line needs about 565px, not because
+   the type was too big. Widened first, then trimmed half a point for margin,
+   so an orphaned last word cannot come back if the copy grows slightly.
+   On phones the viewport is narrower than the cap, so this is desktop-only
+   and the two-line mobile wrap is unchanged. */
+.hero .lede     { grid-area: sub;  max-width: 680px; margin-inline: auto; margin-bottom: 16px; font-size: 15.5px; }
 .hero .video-frame { grid-area: vid; }
 .hero .cta-hero { grid-area: cta; justify-self: center; }
 .hero .cta-sub { grid-area: ctasub; }
