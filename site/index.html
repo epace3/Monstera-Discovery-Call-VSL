@@ -27,11 +27,13 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1828499953929219&ev=PageView&noscript=1" alt=""/></noscript>
 <!-- End Meta Pixel Code -->
 
-<title>Before You List Your Toronto Home | North Group Real Estate</title>
+<title>Need More Space In Toronto? | North Group Real Estate</title>
 <meta name="description" content="See what actually sold in your Toronto area in the last 60 days. Book a free 15-minute call with a sales representative at Real Broker Ontario Ltd., Brokerage.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://player.vimeo.com">
+<link rel="preconnect" href="https://embed.typeform.com">
 <style>
 /* ============================================================
    MONSTERA VSL FUNNEL - SHARED STYLES
@@ -349,7 +351,9 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
      while Typeform still sets body{overflow:hidden}: the page then
      looks frozen and the form never appears.
      ============================================================ -->
-<link rel="stylesheet" href="https://embed.typeform.com/next/css/popup.css">
+<link rel="stylesheet" href="https://embed.typeform.com/next/css/popup.css"
+      media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://embed.typeform.com/next/css/popup.css"></noscript>
 </head>
 <body>
 
@@ -364,10 +368,10 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
   <div class="hero-grid">
 
     <!-- 1. HEADLINE -->
-    <h1>Before you consider selling your Toronto home, see what actually sold in your area in the last 60 days.</h1>
+    <h1>Need more space in Toronto? Find out if a move even makes sense, in just 15 mins.</h1>
 
     <!-- 2. SUBHEADLINE -->
-    <p class="lede">A free 15-minute call. No listing agreement, no obligation.</p>
+    <p class="lede">Free. No pressure, no open houses, no one in your home until you’re ready.</p>
 
     <!-- 3. VIDEO. Vimeo 1223856193. Source ratio 65.06% = 1.537:1, not 16:9.
          Desktop: its own column so it can be large without pushing the
@@ -612,8 +616,25 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 })();
 </script>
 
-<script src="https://player.vimeo.com/api/player.js"></script>
-<script src="https://embed.typeform.com/next/embed.js"></script>
+<script>
+(function () {
+  var loaded = false;
+  function loadTypeform() {
+    if (loaded) return;
+    loaded = true;
+    var s = document.createElement('script');
+    s.src = 'https://embed.typeform.com/next/embed.js';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+  var EVENTS = ['pointerdown', 'touchstart', 'keydown', 'scroll', 'mousemove'];
+  EVENTS.forEach(function (e) {
+    window.addEventListener(e, loadTypeform, { once: true, passive: true });
+  });
+  if (document.readyState === 'complete') { setTimeout(loadTypeform, 1200); }
+  else { window.addEventListener('load', function () { setTimeout(loadTypeform, 1200); }); }
+})();
+</script>
 <script>
 (function () {
   var FORM_ID = 'RBHYsHVT';   // the form id, NOT the live-embed id
