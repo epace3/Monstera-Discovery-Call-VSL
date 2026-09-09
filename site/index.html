@@ -118,9 +118,14 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 .hero { padding: 20px 0 16px; text-align: center; }
 .hero-grid {
   /* STACKED at every width, by design: headline, subheadline, video,
-     social proof bar, button. Never side by side. */
+     button, then the proof bar. Never side by side.
+     The button sits directly under the video on purpose: the video is what
+     earns the click, so the click target belongs at the moment it is earned,
+     not below a block of statistics. Proof moved under it 8 Sept 2026.
+     Area order matches DOM order, so tab order and screen-reader order match
+     what is on screen. If you reorder one, reorder the other. */
   display: grid;
-  grid-template-areas: "head" "sub" "vid" "proof" "note" "cta" "ctasub";
+  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "proof" "note";
   max-width: 920px; margin-inline: auto; padding-inline: 24px;
 }
 .hero h1        { grid-area: head; margin-bottom: 10px; }
@@ -140,15 +145,6 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 /* video edge to edge on phones: claws back the 48px of side padding */
 @media (max-width: 899px) {
   .hero-grid > .video-frame { margin-inline: -24px; width: calc(100% + 48px); max-width: none; border-radius: 0; }
-}
-
-/* PHONES ONLY. The subheadline is 144 characters, which is four lines on a
-   375px screen and left the button only 3px above the fold on an iPhone SE.
-   14.5px takes it to three lines and +32px. Desktop keeps 15.5px, where the
-   line count is unaffected. If the subheadline copy gets shorter, raise this
-   back and re-measure rather than leaving it small out of habit. */
-@media (max-width: 899px) {
-  .hero .lede { font-size: 14.5px; }
 }
 
 
@@ -172,16 +168,6 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
   box-shadow: 0 2px 4px rgba(16,18,17,.04), 0 12px 32px rgba(16,18,17,.09);
 }
 
-/* SHORT SCREENS ONLY. Overrides the width cap above, nothing else.
-   The subheadline runs two lines on desktop, which costs 25px, and on a
-   720px or 700px tall laptop that was enough to push the button below the
-   fold. Tightening the cap from 48vh to 44vh gives it back.
-   Scoped deliberately: min-width keeps phones out, where the width is 100%
-   and this cap never binds anyway, and max-height keeps tall desktops out,
-   where the 880px max binds first. */
-@media (min-width: 900px) and (max-height: 820px) {
-  .video-frame { width: min(880px, 100%, calc(44vh * 1.537)); }
-}
 .video-frame iframe, .video-frame video { width: 100%; height: 100%; border: 0; display: block; }
 
 .video-ph {
@@ -425,6 +411,14 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
               title="Watch This If You're Thinking Of Moving In Toronto..."></iframe>
     </div>
 
+    <!-- 4. BOOK A CALL BUTTON
+         A real link to the hosted form. JS upgrades it to the Typeform
+         popup; if the embed script is blocked the link still books.
+         NOTE: Typeform's UI gives a LIVE id (01M1JAFJDTJE6GB8G1T7S38G3A).
+         The popup API does NOT resolve live ids. Use the FORM id. -->
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+    <p class="cta-sub">Takes about 90 seconds. You pick your own time at the end.</p>
+
     <!-- 4. SOCIAL PROOF BAR
          RECO Bulletin 5.1: volume/activity claims must explain how they
          were measured, and a TEAM achievement must be identified as one
@@ -436,14 +430,6 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
       <div class="proof-item"><b>4.9<i>&#9733;</i></b><span>Average rating</span></div>
     </div>
     <p class="proof-note">Statistics across our team, North Group Real Estate, at Real Broker Ontario Ltd., Brokerage. As of September 2026.</p>
-
-    <!-- 5. BOOK A CALL BUTTON
-         A real link to the hosted form. JS upgrades it to the Typeform
-         popup; if the embed script is blocked the link still books.
-         NOTE: Typeform's UI gives a LIVE id (01M1JAFJDTJE6GB8G1T7S38G3A).
-         The popup API does NOT resolve live ids. Use the FORM id. -->
-    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
-    <p class="cta-sub">Takes about 90 seconds. You pick your own time at the end.</p>
 
   </div>
 </section>

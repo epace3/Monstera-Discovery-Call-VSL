@@ -40,8 +40,14 @@ VIEWPORTS = [
 
 # Blocks that must sit above the fold, per page type.
 ABOVE_FOLD = {
+    # Emma, 8 Sept 2026: order is headline, subheadline, video, button, and the
+    # proof bar moved BELOW the button. The video earns the click, so the click
+    # target belongs directly under it rather than under a block of statistics.
+    # The proof bar is therefore no longer required above the fold; it and its
+    # qualifying note travel together further down. The button, which is what
+    # this check exists to protect, is now further above the fold than before.
     "registration": [("headline", "h1"), ("subheadline", ".lede"), ("video", ".video-frame"),
-                     ("social proof bar", ".proof"), ("book a call button", ".cta-hero")],
+                     ("book a call button", ".cta-hero")],
     "confirmation": [("headline", "h1"), ("video", ".video-frame")],
     # The unqualified page carries no video: it goes to leads booked with a
     # different agent, so Emma's "before we talk" clip does not belong on it.
