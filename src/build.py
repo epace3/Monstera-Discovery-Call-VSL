@@ -161,7 +161,10 @@ for src, out, needs_reviews, pixel, schedule, title in TARGETS:
         # Optimise campaigns on Schedule, never on these.
         assert "fbq('trackCustom'" in h, f'{out} lost the trackCustom wrapper'
         custom = set(re.findall(r"fire(?:Once)?\('(\w+)'", h))
-        expected = {'CTAClick', 'FormOpen', 'VideoPlay', 'VideoProgress'}
+        expected = {'FormOpen', 'VideoPlay', 'VideoProgress'}
+        # One booking event for the page, deduped. If CTAClick or a
+        # per-button event reappears here, someone re-added the noise
+        # Emma asked to remove.
         assert custom == expected, f'{out} diagnostic events wrong: {custom or "none"}'
         assert 'api/player.js' not in h, f'{out} must not reload the Vimeo player library'
     # The confirmation pages describe a phone call, never a video meeting.

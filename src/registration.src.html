@@ -288,29 +288,25 @@ __REVIEWS__
     alreadyFired[name] = true;
     fire(name, params);
   }
-  function placementOf(el) {
-    if (el.closest('#stickyBar')) return 'sticky';
-    if (el.closest('.cta-repeat')) return 'footer';
-    if (el.closest('.hero')) return 'hero';
-    return 'other';
-  }
-
   document.querySelectorAll('.js-book').forEach(function (a) {
     a.addEventListener('click', function (e) {
-      // Fired on EVERY click, before anything can go wrong below, so a
-      // click still registers even when the popup path fails. Repeat
-      // clicks are kept rather than deduped: someone pressing twice is
-      // real signal that the button did not appear to respond.
-      fire('CTAClick', { placement: placementOf(a) });
+      var canPopup = !!(window.tf && window.tf.createPopup);
+
+      // ONE event for the whole page, not one per button. All three booking
+      // buttons are the same action, so they share a single count and it is
+      // deduped per page view: the number means "how many people opened the
+      // form", not "how many times a button was pressed".
+      // It fires BEFORE the popup is attempted, so a visitor who clicked is
+      // counted even when the embed fails. `opened` records which happened.
+      // If opened:false ever starts climbing, the embed is broken and those
+      // people are being dropped onto the hosted form instead.
+      fireOnce('FormOpen', { opened: canPopup });
 
       // If the embed script never loaded, fall through to the plain link.
-      if (!window.tf || !window.tf.createPopup) return;
+      if (!canPopup) return;
       e.preventDefault();
       if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration' });
       popup.open();
-      // Only after open() returns, so this counts forms that actually
-      // opened, not clicks that intended to open one.
-      fireOnce('FormOpen', {});
     });
   });
 
