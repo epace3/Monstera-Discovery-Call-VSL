@@ -669,15 +669,98 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
   // The .js-book anchors keep a real href to the Typeform itself, so if the
   // embed script never loads the click still reaches the qualified form.
 
+  // ------------------------------------------------------------------
+  // DIAGNOSTIC EVENTS
+  // These are trackCustom, NOT standard events, deliberately. They must
+  // never be confused with the Schedule conversion that fires on /booked,
+  // and Meta must never optimise a campaign toward them. They exist to
+  // answer one question this page cannot otherwise answer: of the people
+  // who land here, how many press the button, how many actually reach the
+  // form, and how far into the video do they get.
+  // In Events Manager these appear as custom events. Build Custom
+  // Conversions and audiences from them. Do not set them as the
+  // optimisation goal of an ad set.
+  // ------------------------------------------------------------------
+  function fire(name, params) {
+    if (typeof fbq !== 'function') return;
+    try { fbq('trackCustom', name, params || {}); } catch (e) {}
+  }
+  var alreadyFired = {};
+  function fireOnce(name, params) {
+    if (alreadyFired[name]) return;
+    alreadyFired[name] = true;
+    fire(name, params);
+  }
+  function placementOf(el) {
+    if (el.closest('#stickyBar')) return 'sticky';
+    if (el.closest('.cta-repeat')) return 'footer';
+    if (el.closest('.hero')) return 'hero';
+    return 'other';
+  }
+
   document.querySelectorAll('.js-book').forEach(function (a) {
     a.addEventListener('click', function (e) {
+      // Fired on EVERY click, before anything can go wrong below, so a
+      // click still registers even when the popup path fails. Repeat
+      // clicks are kept rather than deduped: someone pressing twice is
+      // real signal that the button did not appear to respond.
+      fire('CTAClick', { placement: placementOf(a) });
+
       // If the embed script never loaded, fall through to the plain link.
       if (!window.tf || !window.tf.createPopup) return;
       e.preventDefault();
       if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration' });
       popup.open();
+      // Only after open() returns, so this counts forms that actually
+      // opened, not clicks that intended to open one.
+      fireOnce('FormOpen', {});
     });
   });
+
+  // ------------------------------------------------------------------
+  // VIDEO ENGAGEMENT
+  // Uses Vimeo's postMessage interface directly rather than loading
+  // player.js. The library is about 90KB of JavaScript for what this does
+  // in twenty lines, and it was removed from this page for exactly that
+  // reason. Do not add it back.
+  // ------------------------------------------------------------------
+  (function () {
+    var frame = document.querySelector('.video-frame iframe');
+    if (!frame) return;
+    var ORIGIN = 'https://player.vimeo.com';
+    var MARKS = [25, 50, 75];
+    var hit = {};
+
+    function subscribe() {
+      ['play', 'timeupdate'].forEach(function (evt) {
+        try {
+          frame.contentWindow.postMessage(
+            JSON.stringify({ method: 'addEventListener', value: evt }), ORIGIN);
+        } catch (e) { /* iframe not ready yet; the load handler retries */ }
+      });
+    }
+
+    window.addEventListener('message', function (e) {
+      if (e.origin !== ORIGIN) return;
+      var d;
+      try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch (err) { return; }
+      if (!d || !d.event) return;
+
+      if (d.event === 'ready') { subscribe(); return; }
+      if (d.event === 'play') { fireOnce('VideoPlay', {}); return; }
+      if (d.event === 'timeupdate' && d.data && typeof d.data.percent === 'number') {
+        var pct = d.data.percent * 100;
+        MARKS.forEach(function (m) {
+          if (pct >= m && !hit[m]) { hit[m] = true; fire('VideoProgress', { percent: m }); }
+        });
+      }
+    });
+
+    // Covers the race where the player was ready before the listener
+    // above attached. Subscribing twice is harmless.
+    frame.addEventListener('load', subscribe);
+    subscribe();
+  })();
 
   // Sticky bar (phones only, via CSS): show once past the hero, but hide
   // while a CTA is on screen so there are never two at once.

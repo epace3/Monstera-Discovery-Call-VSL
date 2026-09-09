@@ -154,6 +154,16 @@ for src, out, needs_reviews, pixel, schedule, title in TARGETS:
         assert n == 2, f'{out} should hold exactly the two Schedule branches, found {n}'
         assert 'eventID' in h, f'{out} Schedule must carry an eventID when the invitee id is present'
         assert 'mdhb_schedule_fired' in h, f'{out} Schedule is missing the repeat-fire guard'
+    if 'registration' in out:
+        # Diagnostic events. These are trackCustom, so they never show up in
+        # `tracked` above and can never be mistaken for a conversion. They
+        # answer "is anyone pressing the button", which nothing else can.
+        # Optimise campaigns on Schedule, never on these.
+        assert "fbq('trackCustom'" in h, f'{out} lost the trackCustom wrapper'
+        custom = set(re.findall(r"fire(?:Once)?\('(\w+)'", h))
+        expected = {'CTAClick', 'FormOpen', 'VideoPlay', 'VideoProgress'}
+        assert custom == expected, f'{out} diagnostic events wrong: {custom or "none"}'
+        assert 'api/player.js' not in h, f'{out} must not reload the Vimeo player library'
     # The confirmation pages describe a phone call, never a video meeting.
     # 'zoom-in' / 'zoom-out' are CSS cursor keywords in shared.css, not a
     # reference to Zoom, so they are excluded rather than renamed.
