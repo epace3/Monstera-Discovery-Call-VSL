@@ -60,6 +60,11 @@ BROKERAGE = "Real Broker Ontario Ltd., Brokerage"
 AGENTS = [("Emma Pace", "Sales Representative"), ("Amir Moradian", "Sales Representative")]
 PERMITTED_TERMS = ["salesperson", "real estate salesperson", "sales representative",
                    "real estate agent", "real estate sales representative", "realtor"]
+# Schedule as a quoted string literal, i.e. an actual event call. Prose
+# mentioning the word (such as the comment recording its removal) is not a
+# defect and must not fail the check.
+SCHEDULE_CALL = re.compile(r"['\"]Schedule['\"]")
+
 DISCLOSURES = [
     ("Facebook/Meta", r"not connected with or endorsed by facebook or meta"),
     ("not intended to solicit", r"not intended to solicit buyers or sellers currently under contract"),
@@ -101,24 +106,17 @@ def audit(path, page_type):
             # excluded from targeting, but it must never fire a conversion.
             check(tracked == ["PageView"], "unqualified fires PageView only, no conversion",
                   f"found {tracked}")
-            check("Schedule" not in html, "unqualified page contains no Schedule event")
-        elif page_type == "registration":
-            check(tracked == ["PageView"], "registration fires PageView only, no conversion",
-                  f"found {tracked}")
+            check(not SCHEDULE_CALL.search(html), "unqualified page contains no Schedule event")
         else:
-            # The if/else gives two literal Schedule calls, one per branch, and
-            # exactly one runs. A third would mean a duplicated block.
-            check(html.count("fbq('track', 'Schedule'") == 2,
-                  "exactly the two Schedule branches present, no duplicated block",
-                  f"found {html.count(chr(102)+chr(98)+chr(113)+chr(40)+chr(39)+'track'+chr(39)+', '+chr(39)+'Schedule'+chr(39))}")
-            check("eventID" in html, "Schedule carries an eventID for CAPI deduplication")
-            # The Schedule fires on arrival whether or not the invitee id is
-            # present, so the only thing standing between a refresh and a double
-            # count is the sessionStorage guard. It must be there.
-            check("mdhb_schedule_fired" in html,
-                  "Schedule is guarded against firing twice in one tab")
-            check(re.search(r"sessionStorage\.setItem", html),
-                  "the repeat-fire guard writes its flag")
+            # Every funnel page is PageView-only as of 10 September 2026.
+            # The Schedule event was removed from /booked at Emma's request.
+            # If a Schedule ever reappears in a page, it is either a mistake or
+            # a deliberate reversal that also needs the server-side source
+            # turned off, or bookings get counted twice with no shared event id
+            # to dedupe on. Fail loudly either way.
+            check(tracked == ["PageView"], "fires PageView only, no conversion",
+                  f"found {tracked}")
+            check(not SCHEDULE_CALL.search(html), "page contains no Schedule event")
 
     # The confirmation pages describe a 15-minute outbound PHONE call.
     # zoom-in / zoom-out are CSS cursor keywords, not a reference to Zoom.

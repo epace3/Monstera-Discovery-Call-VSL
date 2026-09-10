@@ -69,29 +69,18 @@ NO_PIXEL_BLOCK = '''<!-- No analytics on this page by design. -->'''
 # the Calendly event, a booking with no invitee_uuid is reported twice: once by
 # the browser with no eventID and once by CAPI. Turning that setting ON is what
 # actually closes this.
-SCHEDULE_BLOCK = '''<script>
-(function () {
-  if (typeof fbq !== 'function') return;
-
-  // The booking happens inside Calendly's iframe inside Typeform's iframe, so this
-  // page cannot observe it directly. It does not need to: Ending B is only reachable
-  // through the required Calendly question, so landing here means a booking happened.
-  // Guarded so a refresh or a back-button return cannot fire it twice.
-  var KEY = 'mdhb_schedule_fired';
-  try {
-    if (sessionStorage.getItem(KEY)) return;
-    sessionStorage.setItem(KEY, '1');
-  } catch (e) { /* private mode: storage unavailable, fire once and move on */ }
-
-  var p = new URLSearchParams(window.location.search);
-  var inviteeId = p.get('invitee_uuid') || p.get('invitee_id');
-  if (inviteeId) {
-    fbq('track', 'Schedule', {}, { eventID: inviteeId });
-  } else {
-    fbq('track', 'Schedule');
-  }
-})();
-</script>'''
+# NO CONVERSION EVENT ON /booked. Removed 10 September 2026 at Emma's request.
+# The page still fires the base pixel PageView, like every other funnel page,
+# so audiences and retargeting are unaffected. It no longer fires Schedule.
+#
+# READ THIS BEFORE PUTTING IT BACK: with the browser event gone, Meta receives
+# NO Schedule from this funnel unless something server-side sends it. Any ad
+# set optimising for Schedule has no conversion signal to learn from. If the
+# server-side source is later switched on, that becomes the single source and
+# this must stay empty, or every booking is counted twice with no shared event
+# id to dedupe on.
+SCHEDULE_BLOCK = '''<!-- No conversion event fires on this page by design.
+     PageView only, from the base pixel above. See build.py for why. -->'''
 
 # ============================================================================
 # LEGAL AND CONTACT LINKS — ONE PLACE, SHARED BY EVERY PAGE.
@@ -141,19 +130,9 @@ for src, out, needs_reviews, pixel, schedule, title in TARGETS:
     # --- hard guarantees, checked on every build ---
     tracked = re.findall(r"fbq\('track',\s*'(\w+)'", h)
     assert f"fbq('init', '{PIXEL_ID}')" in h, f'{out} lost the pixel base code'
-    if 'unqualified' in out or 'registration' in out:
-        assert tracked == ['PageView'], f'{out} must fire PageView only, found {tracked}'
-    else:
-        # Two literal Schedule calls appear in the source: the if/else branches
-        # for "invitee id present" and "absent". Exactly one RUNS. Counting text
-        # occurrences cannot tell you that, so this asserts the shape of the
-        # block and the live runtime test proves the count.
-        assert tracked[0] == 'PageView', f'{out} must fire PageView first, found {tracked}'
-        assert set(tracked) == {'PageView', 'Schedule'}, f'{out} fires unexpected events: {tracked}'
-        n = h.count("fbq('track', 'Schedule'")
-        assert n == 2, f'{out} should hold exactly the two Schedule branches, found {n}'
-        assert 'eventID' in h, f'{out} Schedule must carry an eventID when the invitee id is present'
-        assert 'mdhb_schedule_fired' in h, f'{out} Schedule is missing the repeat-fire guard'
+    # PageView on every funnel page, and nothing else on any of them.
+    assert tracked == ['PageView'], f'{out} must fire PageView only, found {tracked}'
+    assert "'Schedule'" not in h, f'{out} still carries a Schedule event'
     if 'registration' in out:
         # Diagnostic events. These are trackCustom, so they never show up in
         # `tracked` above and can never be mistaken for a conversion. They

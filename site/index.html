@@ -6,9 +6,10 @@
 
 <!-- ============================================================
      META PIXEL - base code. Pixel ID 1828499953929219.
-     NO conversion event fires on this page by design: audience
-     collection only. The Schedule event lives on the confirmation
-     page. PageView is part of the standard base snippet and is what
+     NO conversion event fires on this page, or on any funnel page.
+     As of 10 Sept 2026 every page is PageView only: the Schedule event
+     was removed from /booked. PageView is part of the standard base
+     snippet and is what
      builds the retargeting audience; it is not a conversion event.
      ============================================================ -->
 <script>
@@ -677,9 +678,9 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 
   // ------------------------------------------------------------------
   // DIAGNOSTIC EVENTS
-  // These are trackCustom, NOT standard events, deliberately. They must
-  // never be confused with the Schedule conversion that fires on /booked,
-  // and Meta must never optimise a campaign toward them. They exist to
+  // These are trackCustom, NOT standard events, deliberately. Meta must
+  // never optimise a campaign toward them, and they must never be mistaken
+  // for a conversion. They exist to
   // answer one question this page cannot otherwise answer: of the people
   // who land here, how many press the button, how many actually reach the
   // form, and how far into the video do they get.
