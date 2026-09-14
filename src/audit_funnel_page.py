@@ -175,8 +175,14 @@ def audit(path, page_type):
             check(page_type in ("confirmation-unqualified", "legal"),
                   "no video on this page type, as intended")
         else:
-            check(abs(ratio - 1.537) < 0.02,
-                  "video matches its source aspect ratio (not letterboxed)", f"rendered {ratio}")
+            # Per page type, because the videos are different shapes. The
+            # registration VSL (Vimeo 1226714744) is 1440x1080 = 4:3; the
+            # confirmation clips are 1.537:1. Update the expected value here
+            # in the same commit as any video swap.
+            expected = 1.333 if page_type == "registration" else 1.537
+            check(abs(ratio - expected) < 0.02,
+                  "video matches its source aspect ratio (not letterboxed)",
+                  f"rendered {ratio}, expected {expected}")
 
         small = pg.evaluate("""()=>{const bad=[];
             document.querySelectorAll('a.cta, button.cta, .js-book').forEach(e=>{

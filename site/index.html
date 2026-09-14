@@ -126,7 +126,7 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
      Area order matches DOM order, so tab order and screen-reader order match
      what is on screen. If you reorder one, reorder the other. */
   display: grid;
-  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "proof" "note";
+  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "covers" "proof" "note";
   max-width: 920px; margin-inline: auto; padding-inline: 24px;
 }
 .hero h1        { grid-area: head; margin-bottom: 10px; }
@@ -137,7 +137,27 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
    On phones the viewport is narrower than the cap, so this is desktop-only
    and the two-line mobile wrap is unchanged. */
 .hero .lede     { grid-area: sub;  max-width: 680px; margin-inline: auto; margin-bottom: 16px; font-size: 15.5px; }
-.hero .video-frame { grid-area: vid; }
+/* SCOPED TO .hero-grid, NOT .hero. Both confirmation pages carry
+   class="hero narrow", so a .hero-descendant selector reaches them too and
+   silently reshapes their clips. .hero-grid exists only on the registration
+   page. Verified by grep across all three sources before writing this. */
+.hero-grid .video-frame {
+  grid-area: vid;
+  /* The registration VSL is Vimeo 1226714744, source 1440x1080 = 4:3, a
+     different shape from the confirmation clips. Both values below are that
+     ratio and must change together whenever this video is swapped. */
+  aspect-ratio: 4 / 3;
+  width: min(880px, 100%, calc(48vh * 1.333));
+}
+
+/* SHORT SCREENS ONLY. 4:3 is a taller frame than the video it replaced, and
+   at 48vh it pushed the button 7px below the fold on a 720px laptop and 18px
+   on a 700px one. 44vh gives back ~29px. min-width keeps phones out, where
+   the width is 100% and this cap never binds; max-height keeps tall desktops
+   out, where the 880px max binds first. */
+@media (min-width: 900px) and (max-height: 820px) {
+  .hero-grid .video-frame { width: min(880px, 100%, calc(44vh * 1.333)); }
+}
 .hero .cta-hero { grid-area: cta; justify-self: center; }
 .hero .cta-sub { grid-area: ctasub; }
 .hero .proof    { grid-area: proof; }
@@ -151,7 +171,11 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 
 /* ---------- VIDEO ---------- */
 .video-frame {
-  /* Ratio matches the Vimeo source (65.06% padding = 1.537:1), not 16:9.
+  /* Ratio matches the Vimeo SOURCE. This is a per-video value, not a design
+     choice: if it does not match the source the player letterboxes.
+     THIS DEFAULT IS FOR THE CONFIRMATION PAGES, whose clips are 1.537:1.
+     The registration hero video is a different shape and overrides both this
+     and the width cap below. See ".hero .video-frame" further down.
      Height is driven by the viewport so the CTA and proof below it stay
      above the fold on short laptops as well as phones. */
   position: relative;
@@ -160,8 +184,9 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
      viewport-height cap so a short laptop can never lose the CTA. */
   /* Constrain the WIDTH from viewport height, never max-height: capping
      the height fights aspect-ratio and squashes the video. Deriving width
-     from 48vh keeps the true 1.537:1 ratio AND guarantees the proof bar
-     and button below it stay above the fold on a 720px-tall laptop. */
+     from 48vh keeps the true ratio AND guarantees the button below it stays
+     above the fold on a 720px-tall laptop. The multiplier IS the video's
+     ratio: change it whenever aspect-ratio above changes. */
   width: min(880px, 100%, calc(48vh * 1.537));
   height: auto;
   margin-inline: auto;
@@ -200,6 +225,31 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 .cta:active { transform: translateY(0); }
 .cta:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 .cta-sub { margin-top: 10px; font-size: 13.5px; color: var(--ink-3); }
+
+/* What the call covers. Sits in the hero grid under the button. Uses the
+   existing ink tokens and type scale, so it introduces no new styling
+   vocabulary, only layout for a list that did not exist before. */
+.call-covers {
+  grid-area: covers;
+  margin: 18px auto 0;
+  max-width: 660px;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.call-covers li { position: relative; padding-left: 26px; margin-bottom: 9px; }
+.call-covers li:last-child { margin-bottom: 0; }
+.call-covers li::before {
+  content: "";
+  position: absolute;
+  left: 8px; top: 8px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
 .cta-repeat { text-align: center; margin-top: 26px; }
 
 @media (max-width: 560px) {
@@ -396,20 +446,22 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
   <div class="hero-grid">
 
     <!-- 1. HEADLINE -->
-    <h1>Need more space in Toronto? Find out if a move even makes sense, in just 15 mins.</h1>
+    <h1>Thinking about your next home in Toronto? Figure out whether a move actually makes sense before you spend another weekend looking at houses.</h1>
 
     <!-- 2. SUBHEADLINE -->
-    <p class="lede">Watch the short video below. It breaks down what the last 60 days of sold data means for your move. Then decide if a 15-minute call makes sense.</p>
+    <p class="lede">Free 15-minute call to understand your situation, your numbers, and whether the home you&rsquo;re imagining is realistic or whether you should wait and why. No pressure, no obligation, no sales pitch.</p>
 
-    <!-- 3. VIDEO. Vimeo 1223856193. Source ratio 65.06% = 1.537:1, not 16:9.
-         Desktop: its own column so it can be large without pushing the
-         button below the fold. Mobile: full width, edge to edge. -->
+    <!-- 3. VIDEO. Vimeo 1226714744. Source is 1440x1080, i.e. 4:3 (1.333:1).
+         shared.css .video-frame aspect-ratio MUST match this or the video
+         letterboxes. If this video is ever swapped again, check the new
+         source dimensions and update both together.
+         Mobile: full width, edge to edge. -->
     <div class="video-frame">
-      <iframe src="https://player.vimeo.com/video/1223856193?h=f7d4df9aa8&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+      <iframe src="https://player.vimeo.com/video/1226714744?h=6436820dee&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
               frameborder="0"
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
               referrerpolicy="strict-origin-when-cross-origin"
-              title="Watch This If You're Thinking Of Moving In Toronto..."></iframe>
+              title="Watch If You&rsquo;re Moving In The Next 3-6 Months"></iframe>
     </div>
 
     <!-- 4. BOOK A CALL BUTTON
@@ -417,10 +469,22 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
          popup; if the embed script is blocked the link still books.
          NOTE: Typeform's UI gives a LIVE id (01M1JAFJDTJE6GB8G1T7S38G3A).
          The popup API does NOT resolve live ids. Use the FORM id. -->
-    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book Your Free Discovery Call</a>
     <p class="cta-sub">Takes about 90 seconds. You pick your own time at the end.</p>
 
-    <!-- 4. SOCIAL PROOF BAR
+    <!-- 5. WHAT THE CALL COVERS
+         Lives inside the hero grid, under the button, not as a new section.
+         Describes what gets discussed on the call. No outcome is promised,
+         which is what keeps it inside RECO Bulletin 5.1. -->
+    <ul class="call-covers">
+      <li>What you can comfortably afford to carry every month, not just what the bank says you&rsquo;re approved for</li>
+      <li>What that number actually buys in the neighbourhoods you&rsquo;d actually want to live in</li>
+      <li>If you already own, what your current home is realistically worth and what the gap between selling and buying looks like</li>
+      <li>The exact order everything needs to happen in so you&rsquo;re not stressed, stretched, or stuck between two transactions</li>
+      <li>Whether the move makes sense right now, whether you should wait, or whether you need to change the plan entirely</li>
+    </ul>
+
+    <!-- 6. SOCIAL PROOF BAR
          RECO Bulletin 5.1: volume/activity claims must explain how they
          were measured, and a TEAM achievement must be identified as one
          with the team size stated. The note below does that. Do not
@@ -572,13 +636,13 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
     </div>
   </div>
   <div class="cta-repeat">
-    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book Your Free Discovery Call</a>
   </div>
 </section>
 
 <!-- sticky booking bar, phones only, appears once past the hero -->
 <div class="stickybar" id="stickyBar" hidden>
-  <a class="cta js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+  <a class="cta js-book" href="https://form.typeform.com/to/RBHYsHVT">Book Your Free Discovery Call</a>
 </div>
 
 <!-- ============================================================

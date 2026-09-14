@@ -70,20 +70,22 @@ __SHARED_CSS__
   <div class="hero-grid">
 
     <!-- 1. HEADLINE -->
-    <h1>Need more space in Toronto? Find out if a move even makes sense, in just 15 mins.</h1>
+    <h1>Thinking about your next home in Toronto? Figure out whether a move actually makes sense before you spend another weekend looking at houses.</h1>
 
     <!-- 2. SUBHEADLINE -->
-    <p class="lede">Watch the short video below. It breaks down what the last 60 days of sold data means for your move. Then decide if a 15-minute call makes sense.</p>
+    <p class="lede">Free 15-minute call to understand your situation, your numbers, and whether the home you&rsquo;re imagining is realistic or whether you should wait and why. No pressure, no obligation, no sales pitch.</p>
 
-    <!-- 3. VIDEO. Vimeo 1223856193. Source ratio 65.06% = 1.537:1, not 16:9.
-         Desktop: its own column so it can be large without pushing the
-         button below the fold. Mobile: full width, edge to edge. -->
+    <!-- 3. VIDEO. Vimeo 1226714744. Source is 1440x1080, i.e. 4:3 (1.333:1).
+         shared.css .video-frame aspect-ratio MUST match this or the video
+         letterboxes. If this video is ever swapped again, check the new
+         source dimensions and update both together.
+         Mobile: full width, edge to edge. -->
     <div class="video-frame">
-      <iframe src="https://player.vimeo.com/video/1223856193?h=f7d4df9aa8&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+      <iframe src="https://player.vimeo.com/video/1226714744?h=6436820dee&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
               frameborder="0"
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
               referrerpolicy="strict-origin-when-cross-origin"
-              title="Watch This If You're Thinking Of Moving In Toronto..."></iframe>
+              title="Watch If You&rsquo;re Moving In The Next 3-6 Months"></iframe>
     </div>
 
     <!-- 4. BOOK A CALL BUTTON
@@ -91,10 +93,22 @@ __SHARED_CSS__
          popup; if the embed script is blocked the link still books.
          NOTE: Typeform's UI gives a LIVE id (01M1JAFJDTJE6GB8G1T7S38G3A).
          The popup API does NOT resolve live ids. Use the FORM id. -->
-    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book Your Free Discovery Call</a>
     <p class="cta-sub">Takes about 90 seconds. You pick your own time at the end.</p>
 
-    <!-- 4. SOCIAL PROOF BAR
+    <!-- 5. WHAT THE CALL COVERS
+         Lives inside the hero grid, under the button, not as a new section.
+         Describes what gets discussed on the call. No outcome is promised,
+         which is what keeps it inside RECO Bulletin 5.1. -->
+    <ul class="call-covers">
+      <li>What you can comfortably afford to carry every month, not just what the bank says you&rsquo;re approved for</li>
+      <li>What that number actually buys in the neighbourhoods you&rsquo;d actually want to live in</li>
+      <li>If you already own, what your current home is realistically worth and what the gap between selling and buying looks like</li>
+      <li>The exact order everything needs to happen in so you&rsquo;re not stressed, stretched, or stuck between two transactions</li>
+      <li>Whether the move makes sense right now, whether you should wait, or whether you need to change the plan entirely</li>
+    </ul>
+
+    <!-- 6. SOCIAL PROOF BAR
          RECO Bulletin 5.1: volume/activity claims must explain how they
          were measured, and a TEAM achievement must be identified as one
          with the team size stated. The note below does that. Do not
@@ -163,13 +177,13 @@ __REVIEWS__
     </div>
   </div>
   <div class="cta-repeat">
-    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book Your Free Discovery Call</a>
   </div>
 </section>
 
 <!-- sticky booking bar, phones only, appears once past the hero -->
 <div class="stickybar" id="stickyBar" hidden>
-  <a class="cta js-book" href="https://form.typeform.com/to/RBHYsHVT">Book a discovery call</a>
+  <a class="cta js-book" href="https://form.typeform.com/to/RBHYsHVT">Book Your Free Discovery Call</a>
 </div>
 
 <!-- ============================================================
