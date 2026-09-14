@@ -126,7 +126,7 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
      Area order matches DOM order, so tab order and screen-reader order match
      what is on screen. If you reorder one, reorder the other. */
   display: grid;
-  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "covers" "proof" "note";
+  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "covlead" "covers" "proof" "note";
   max-width: 920px; margin-inline: auto; padding-inline: 24px;
 }
 .hero h1        { grid-area: head; margin-bottom: 10px; }
@@ -229,6 +229,19 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 /* What the call covers. Sits in the hero grid under the button. Uses the
    existing ink tokens and type scale, so it introduces no new styling
    vocabulary, only layout for a list that did not exist before. */
+.covers-lead {
+  grid-area: covlead;
+  margin: 20px auto 0;
+  max-width: 660px;
+  text-align: left;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+/* The list follows immediately, so it loses its own top margin when the
+   lead-in is present and keeps it when it is not. */
+.covers-lead + .call-covers { margin-top: 8px; }
+
 .call-covers {
   grid-area: covers;
   margin: 18px auto 0;
@@ -446,10 +459,10 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
   <div class="hero-grid">
 
     <!-- 1. HEADLINE -->
-    <h1>Thinking about your next home in Toronto? Figure out whether a move actually makes sense before you spend another weekend looking at houses.</h1>
+    <h1>You&rsquo;ve been looking at Toronto listings for months, yet you still don&rsquo;t know if you can actually move&hellip;</h1>
 
     <!-- 2. SUBHEADLINE -->
-    <p class="lede">Free 15-minute call to understand your situation, your numbers, and whether the home you&rsquo;re imagining is realistic or whether you should wait and why. No pressure, no obligation, no sales pitch.</p>
+    <p class="lede">More listings won&rsquo;t fix the problem. You need personalized information. Watch this short video before you waste any more time looking at listings that won&rsquo;t work for you.</p>
 
     <!-- 3. VIDEO. Vimeo 1226714744. Source is 1440x1080, i.e. 4:3 (1.333:1).
          shared.css .video-frame aspect-ratio MUST match this or the video
@@ -470,12 +483,13 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
          NOTE: Typeform's UI gives a LIVE id (01M1JAFJDTJE6GB8G1T7S38G3A).
          The popup API does NOT resolve live ids. Use the FORM id. -->
     <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book Your Free Discovery Call</a>
-    <p class="cta-sub">Takes about 90 seconds. You pick your own time at the end.</p>
+    <p class="cta-sub">Free 15 Min Call. No Pressure. No Obligation. Takes 90 Seconds to book. Choose your own time.</p>
 
     <!-- 5. WHAT THE CALL COVERS
          Lives inside the hero grid, under the button, not as a new section.
          Describes what gets discussed on the call. No outcome is promised,
          which is what keeps it inside RECO Bulletin 5.1. -->
+    <p class="covers-lead">Here&rsquo;s what we figure out together before you ever tour a property:</p>
     <ul class="call-covers">
       <li>What you can comfortably afford to carry every month, not just what the bank says you&rsquo;re approved for</li>
       <li>What that number actually buys in the neighbourhoods you&rsquo;d actually want to live in</li>
