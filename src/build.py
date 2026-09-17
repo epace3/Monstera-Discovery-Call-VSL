@@ -104,6 +104,26 @@ LEGAL_LINKS = (
 TITLE_QUALIFIED   = "You're Booked with Emma | North Group Real Estate"
 TITLE_UNQUALIFIED = "You're Booked | North Group Real Estate"
 
+CLARITY_BLOCK = '''<!-- ============================================================
+     MICROSOFT CLARITY - session recording and heatmaps. Project
+     yjiz24tu21. Added 17 September 2026 at Emma's request.
+     Async by construction: the snippet only injects a script tag with
+     async=1, so it does not block first paint. Keep it that way. This
+     page went from a PageSpeed mobile score of 41 to 90 by getting
+     third-party JavaScript off the critical path; do not undo that by
+     making this synchronous or moving the real clarity.js inline.
+     It is analytics only. It fires no conversion event and has nothing
+     to do with the Meta pixel above.
+     ============================================================ -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "yjiz24tu21");
+</script>
+<!-- End Microsoft Clarity -->'''
+
 # (source, output, needs review wall, pixel block, schedule block, title)
 TARGETS = [
     ('registration.src.html', 'vsl_registration_page.html',      True,  PIXEL_BLOCK, None, None),
@@ -122,6 +142,11 @@ for src, out, needs_reviews, pixel, schedule, title in TARGETS:
     if needs_reviews:
         h = (h.replace('__REVIEWS__', wall.render(None))
                .replace('__REVIEW_COUNT__', str(wall.COUNT)))
+    # Every page, including registration, whose pixel is inline rather than
+    # tokenised and which therefore never enters the branch below.
+    assert '__CLARITY_BLOCK__' in h, f'{src} is missing __CLARITY_BLOCK__'
+    h = h.replace('__CLARITY_BLOCK__', CLARITY_BLOCK)
+
     if schedule is not None:
         h = h.replace('__PIXEL_BLOCK__', pixel).replace('__SCHEDULE_BLOCK__', schedule)
         h = h.replace('__PAGE_TITLE__', title)
@@ -130,6 +155,12 @@ for src, out, needs_reviews, pixel, schedule, title in TARGETS:
     # --- hard guarantees, checked on every build ---
     tracked = re.findall(r"fbq\('track',\s*'(\w+)'", h)
     assert f"fbq('init', '{PIXEL_ID}')" in h, f'{out} lost the pixel base code'
+    # The snippet builds its src from two pieces, "https://www.clarity.ms/tag/"
+    # plus the project id, so the full URL never appears as a literal. Check
+    # both halves.
+    assert 'clarity.ms/tag/' in h, f'{out} lost the Clarity loader'
+    assert 'yjiz24tu21' in h, f'{out} lost the Clarity project id'
+    assert 't.async=1' in h, f'{out} Clarity must stay async, off the critical path'
     # PageView on every funnel page, and nothing else on any of them.
     assert tracked == ['PageView'], f'{out} must fire PageView only, found {tracked}'
     assert "'Schedule'" not in h, f'{out} still carries a Schedule event'
