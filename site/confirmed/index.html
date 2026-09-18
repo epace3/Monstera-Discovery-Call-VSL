@@ -139,7 +139,7 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
      Area order matches DOM order, so tab order and screen-reader order match
      what is on screen. If you reorder one, reorder the other. */
   display: grid;
-  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "covlead" "covers" "proof" "note";
+  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "proof" "note";
   max-width: 920px; margin-inline: auto; padding-inline: 24px;
 }
 .hero h1        { grid-area: head; margin-bottom: 10px; }
@@ -242,9 +242,11 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 /* What the call covers. Sits in the hero grid under the button. Uses the
    existing ink tokens and type scale, so it introduces no new styling
    vocabulary, only layout for a list that did not exist before. */
+/* The .covers section moved out of the hero on 18 Sept 2026, so these two
+   are no longer grid children and carry no grid-area. They now sit in their
+   own section below the agents block, as the last content before the footer. */
 .covers-lead {
-  grid-area: covlead;
-  margin: 20px auto 0;
+  margin: 0 auto;
   max-width: 660px;
   text-align: left;
   font-size: 14.5px;
@@ -255,9 +257,12 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
    lead-in is present and keeps it when it is not. */
 .covers-lead + .call-covers { margin-top: 8px; }
 
+/* Section wrapper for the moved block. Padding matches the sections above it
+   so the page rhythm is unchanged; only the position moved. */
+.covers { padding: 0 0 44px; }
+
 .call-covers {
-  grid-area: covers;
-  margin: 18px auto 0;
+  margin: 14px auto 0;
   max-width: 660px;
   padding: 0;
   list-style: none;
