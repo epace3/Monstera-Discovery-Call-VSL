@@ -43,6 +43,12 @@ __CLARITY_BLOCK__
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"></noscript>
 <link rel="preconnect" href="https://player.vimeo.com">
 <link rel="preconnect" href="https://embed.typeform.com">
+<!-- The booking form iframe itself loads from form.typeform.com; embed.js
+     comes from embed.typeform.com, a DIFFERENT origin. Warming this second
+     connection at page load takes the DNS+TLS handshake out of the first
+     click, which is exactly when the visitor is staring at a blank popup. -->
+<link rel="preconnect" href="https://form.typeform.com">
+<link rel="dns-prefetch" href="https://form.typeform.com">
 <style>
 __SHARED_CSS__
 </style>
@@ -275,6 +281,11 @@ __REVIEWS__
     var s = document.createElement('script');
     s.src = 'https://embed.typeform.com/next/embed.js';
     s.async = true;
+    // The moment embed.js is ready, build the popup instance so the first
+    // click only has to open() it. Defined by the booking script below.
+    s.addEventListener('load', function () {
+      if (window.__mdhbWarmPopup) window.__mdhbWarmPopup();
+    });
     document.head.appendChild(s);
   }
   var EVENTS = ['pointerdown', 'touchstart', 'keydown', 'scroll', 'mousemove'];
@@ -289,6 +300,23 @@ __REVIEWS__
 (function () {
   var FORM_ID = 'RBHYsHVT';   // the form id, NOT the live-embed id
   var popup = null;
+
+  // ------------------------------------------------------------------
+  // POPUP WARM-UP (Sept 2026)
+  // Session replays caught a high-intent visitor click the button, stare
+  // at a blank popup, refresh the page, and click again. Building the
+  // popup at click time put library setup inside that gap. The loader
+  // above calls this the moment embed.js arrives, so a click only ever
+  // calls open(). createPopup() mounts no DOM until open(), so warming
+  // has no visible effect on the page.
+  // ------------------------------------------------------------------
+  function warmPopup() {
+    if (popup || !(window.tf && window.tf.createPopup)) return;
+    try { popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration' }); }
+    catch (err) { popup = null; }
+  }
+  window.__mdhbWarmPopup = warmPopup;
+  warmPopup(); // covers embed.js finishing before this script runs
 
   // NO DIRECT-TO-CALENDLY LINK ON THIS PAGE, DELIBERATELY.
   // A link straight to the calendar skips the Typeform, which means no
@@ -336,8 +364,18 @@ __REVIEWS__
 
       // If the embed script never loaded, fall through to the plain link.
       if (!canPopup) return;
+      // The instance normally exists already from the warm-up.
+      if (!popup) warmPopup();
+      // If createPopup itself failed, fall through to the hosted form too.
+      // (Previously a throw here landed AFTER preventDefault, so the click
+      // died doing nothing - the worst outcome for the hottest visitor.)
+      if (!popup) return;
       e.preventDefault();
-      if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration' });
+      // Instant feedback on the button itself, ahead of Typeform's overlay:
+      // the click must visibly do something within 100ms. The class is
+      // removed on a timer; the overlay covers the page long before that.
+      a.classList.add('is-opening');
+      setTimeout(function () { a.classList.remove('is-opening'); }, 4000);
       popup.open();
     });
   });
