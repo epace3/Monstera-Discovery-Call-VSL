@@ -785,6 +785,54 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
   var FORM_ID = 'RBHYsHVT';   // the form id, NOT the live-embed id
   var popup = null;
 
+  // ------------------------------------------------------------------
+  // AD ATTRIBUTION PASS-THROUGH (21 Sept 2026)
+  // The Typeform declares hidden fields (fbclid, fbc, fbp, utm_*) but the
+  // n8n webhook log showed EVERY submission arriving with all of them
+  // empty: the popup was created without hidden values and the fallback
+  // href carried no params, so the fbclid died on this page and the CAPI
+  // events GHL sends to Meta had no click attribution to carry.
+  // trackingFields() gathers the values FRESH at each call site (the
+  // pixel sets its _fbp/_fbc cookies asynchronously, so reading them once
+  // at parse time races the pixel) and feeds BOTH booking paths: the
+  // popup via createPopup's hidden option, and the hosted-form fallback
+  // links via URL fragment, which Typeform reads into hidden fields on
+  // direct links.
+  // fbc is constructed from fbclid in Meta's documented
+  // fb.1.<timestamp>.<fbclid> format when the _fbc cookie is absent.
+  // These are hidden-field VALUES only. No fbq call is made here; this
+  // block adds no pixel event.
+  // ------------------------------------------------------------------
+  function getCookie(name) {
+    var m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return m ? decodeURIComponent(m.pop()) : '';
+  }
+  function trackingFields() {
+    var p, f = {};
+    try { p = new URLSearchParams(window.location.search); } catch (e) { return f; }
+    ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
+      var v = p.get(k);
+      if (v) f[k] = v;
+    });
+    var fbp = getCookie('_fbp');
+    if (fbp) f.fbp = fbp;
+    var fbc = getCookie('_fbc');
+    if (!fbc && f.fbclid) fbc = 'fb.1.' + Date.now() + '.' + f.fbclid;
+    if (fbc) f.fbc = fbc;
+    return f;
+  }
+  function applyFallbackHref(a) {
+    var f = trackingFields();
+    var qs = Object.keys(f).map(function (k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(f[k]);
+    }).join('&');
+    if (!qs) return;
+    a.href = a.href.split('#')[0] + '#' + qs;
+  }
+  // Cover right-click / open-in-new-tab on the fallback links straight away;
+  // the click handler below refreshes them again with the freshest cookies.
+  document.querySelectorAll('.js-book').forEach(applyFallbackHref);
+
   // NO DIRECT-TO-CALENDLY LINK ON THIS PAGE, DELIBERATELY.
   // A link straight to the calendar skips the Typeform, which means no
   // qualification answers and no routing, so the lead lands on Emma's personal
@@ -829,10 +877,15 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
       // people are being dropped onto the hosted form instead.
       fireOnce('FormOpen', { opened: canPopup });
 
+      // Refresh the fallback href with the freshest cookie values, so if
+      // this click falls through to the hosted form it still carries the
+      // attribution the popup would have carried.
+      applyFallbackHref(a);
+
       // If the embed script never loaded, fall through to the plain link.
       if (!canPopup) return;
       e.preventDefault();
-      if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration' });
+      if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration', hidden: trackingFields() });
       popup.open();
     });
   });
