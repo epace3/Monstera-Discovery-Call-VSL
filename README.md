@@ -110,3 +110,14 @@ Advertising here follows RECO Bulletins 5.1–5.4:
       through the Calendly step. Calendly inside Typeform inside the page is the
       documented highest-priority mobile risk.
 - [ ] Confirm "Emma Pace" matches the RECO registration exactly.
+## Two writers, one branch: pull before push
+
+This repo is edited from more than one place (the device checkout via GitHub
+Desktop, and Claude committing through the browser). On 21 Sept 2026 a push
+from a checkout that had not pulled rewrote main and silently dropped two
+shipped commits; the visitor-facing popup fix went missing from production
+for a day.
+
+The rule: ALWAYS pull (fetch + merge) before committing or pushing from the
+device checkout. If GitHub Desktop offers "force push", stop: that message
+means the local copy is behind and pushing will erase someone else's work.
