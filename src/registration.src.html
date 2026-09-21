@@ -43,6 +43,12 @@ __CLARITY_BLOCK__
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"></noscript>
 <link rel="preconnect" href="https://player.vimeo.com">
 <link rel="preconnect" href="https://embed.typeform.com">
+<!-- The booking form iframe itself loads from form.typeform.com; embed.js
+     comes from embed.typeform.com, a DIFFERENT origin. Warming this second
+     connection at page load takes the DNS+TLS handshake out of the first
+     click, which is exactly when the visitor is staring at a blank popup. -->
+<link rel="preconnect" href="https://form.typeform.com">
+<link rel="dns-prefetch" href="https://form.typeform.com">
 <style>
 __SHARED_CSS__
 </style>
@@ -389,8 +395,25 @@ __REVIEWS__
 
       // If the embed script never loaded, fall through to the plain link.
       if (!canPopup) return;
+      // Created at CLICK time deliberately: trackingFields() must read the
+      // _fbp/_fbc cookies fresh, after the pixel has had the whole page load
+      // to set them. Do not move this creation to page load; that reopens
+      // the cookie race the attribution commit closed.
+      if (!popup) {
+        try { popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration', hidden: trackingFields() }); }
+        catch (err) { popup = null; }
+      }
+      // If createPopup itself failed, fall through to the hosted form too,
+      // whose href applyFallbackHref just refreshed with the same fields.
+      // (A throw here used to land AFTER preventDefault, so the click died
+      // doing nothing - the worst outcome for the hottest visitor.)
+      if (!popup) return;
       e.preventDefault();
-      if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration', hidden: trackingFields() });
+      // Instant feedback on the button itself, ahead of Typeform's overlay:
+      // the click must visibly do something within 100ms. The class is
+      // removed on a timer; the overlay covers the page long before that.
+      a.classList.add('is-opening');
+      setTimeout(function () { a.classList.remove('is-opening'); }, 4000);
       popup.open();
     });
   });
