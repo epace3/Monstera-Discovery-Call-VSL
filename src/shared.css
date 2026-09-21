@@ -392,3 +392,21 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
     width: 100vw; height: 100dvh; border-radius: 0;
   }
 }
+
+/* Booking button "opening" state (Sept 2026). Session replays showed CTA
+   clicks reading as frozen while the Typeform popup booted. The spinner
+   sits inside the button's own right padding, absolutely positioned, so
+   the button never changes size; the class is removed by a timer in the
+   booking script. */
+.js-book.is-opening { position: relative; pointer-events: none; opacity: .9; }
+.js-book.is-opening::after {
+  content: ""; position: absolute; right: 12px; top: 50%;
+  width: 14px; height: 14px; margin-top: -8px;
+  border: 2px solid currentColor; border-right-color: transparent;
+  border-radius: 50%;
+  animation: cta-opening-spin .7s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js-book.is-opening::after { animation: none; border-right-color: currentColor; opacity: .5; }
+}
+@keyframes cta-opening-spin { to { transform: rotate(360deg); } }
