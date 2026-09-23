@@ -139,7 +139,7 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
      Area order matches DOM order, so tab order and screen-reader order match
      what is on screen. If you reorder one, reorder the other. */
   display: grid;
-  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "proof" "note";
+  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "ctanote" "proof" "note";
   max-width: 920px; margin-inline: auto; padding-inline: 24px;
 }
 .hero h1        { grid-area: head; margin-bottom: 10px; }
@@ -173,6 +173,11 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 }
 .hero .cta-hero { grid-area: cta; justify-self: center; }
 .hero .cta-sub { grid-area: ctasub; }
+/* Second line under the button. Its own area because two children in
+   "ctasub" would occupy the same grid cell and overlap. Styling comes
+   from .cta-sub, so it is the same grey and size; this rule only places
+   it and gives it a readable measure. */
+.hero .cta-note { grid-area: ctanote; max-width: 560px; margin-inline: auto; }
 .hero .proof    { grid-area: proof; }
 .hero .proof-note { grid-area: note; }
 
@@ -449,6 +454,24 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
     width: 100vw; height: 100dvh; border-radius: 0;
   }
 }
+
+/* Booking button "opening" state (Sept 2026). Session replays showed CTA
+   clicks reading as frozen while the Typeform popup booted. The spinner
+   sits inside the button's own right padding, absolutely positioned, so
+   the button never changes size; the class is removed by a timer in the
+   booking script. */
+.js-book.is-opening { position: relative; pointer-events: none; opacity: .9; }
+.js-book.is-opening::after {
+  content: ""; position: absolute; right: 12px; top: 50%;
+  width: 14px; height: 14px; margin-top: -8px;
+  border: 2px solid currentColor; border-right-color: transparent;
+  border-radius: 50%;
+  animation: cta-opening-spin .7s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js-book.is-opening::after { animation: none; border-right-color: currentColor; opacity: .5; }
+}
+@keyframes cta-opening-spin { to { transform: rotate(360deg); } }
 
 
 /* ---------- CONFIRMATION-ONLY ---------- */

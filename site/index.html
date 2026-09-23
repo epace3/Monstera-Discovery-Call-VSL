@@ -61,6 +61,12 @@ src="https://www.facebook.com/tr?id=1828499953929219&ev=PageView&noscript=1" alt
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"></noscript>
 <link rel="preconnect" href="https://player.vimeo.com">
 <link rel="preconnect" href="https://embed.typeform.com">
+<!-- The booking form iframe itself loads from form.typeform.com; embed.js
+     comes from embed.typeform.com, a DIFFERENT origin. Warming this second
+     connection at page load takes the DNS+TLS handshake out of the first
+     click, which is exactly when the visitor is staring at a blank popup. -->
+<link rel="preconnect" href="https://form.typeform.com">
+<link rel="dns-prefetch" href="https://form.typeform.com">
 <style>
 @font-face {
   font-family: 'Inter Fallback';
@@ -146,7 +152,7 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
      Area order matches DOM order, so tab order and screen-reader order match
      what is on screen. If you reorder one, reorder the other. */
   display: grid;
-  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "proof" "note";
+  grid-template-areas: "head" "sub" "vid" "cta" "ctasub" "ctanote" "proof" "note";
   max-width: 920px; margin-inline: auto; padding-inline: 24px;
 }
 .hero h1        { grid-area: head; margin-bottom: 10px; }
@@ -180,6 +186,11 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 }
 .hero .cta-hero { grid-area: cta; justify-self: center; }
 .hero .cta-sub { grid-area: ctasub; }
+/* Second line under the button. Its own area because two children in
+   "ctasub" would occupy the same grid cell and overlap. Styling comes
+   from .cta-sub, so it is the same grey and size; this rule only places
+   it and gives it a readable measure. */
+.hero .cta-note { grid-area: ctanote; max-width: 560px; margin-inline: auto; }
 .hero .proof    { grid-area: proof; }
 .hero .proof-note { grid-area: note; }
 
@@ -457,6 +468,24 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
   }
 }
 
+/* Booking button "opening" state (Sept 2026). Session replays showed CTA
+   clicks reading as frozen while the Typeform popup booted. The spinner
+   sits inside the button's own right padding, absolutely positioned, so
+   the button never changes size; the class is removed by a timer in the
+   booking script. */
+.js-book.is-opening { position: relative; pointer-events: none; opacity: .9; }
+.js-book.is-opening::after {
+  content: ""; position: absolute; right: 12px; top: 50%;
+  width: 14px; height: 14px; margin-top: -8px;
+  border: 2px solid currentColor; border-right-color: transparent;
+  border-radius: 50%;
+  animation: cta-opening-spin .7s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js-book.is-opening::after { animation: none; border-right-color: currentColor; opacity: .5; }
+}
+@keyframes cta-opening-spin { to { transform: rotate(360deg); } }
+
 </style>
 
 <!-- ============================================================
@@ -507,8 +536,9 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
          popup; if the embed script is blocked the link still books.
          NOTE: Typeform's UI gives a LIVE id (01M1JAFJDTJE6GB8G1T7S38G3A).
          The popup API does NOT resolve live ids. Use the FORM id. -->
-    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book Your Free Discovery Call</a>
-    <p class="cta-sub">Free 15 Min Call. No Pressure. No Obligation. Takes 90 Seconds to book. Choose your own time.</p>
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Get Your Move Assessment</a>
+    <p class="cta-sub">15 minutes. Only 90 seconds to book.</p>
+    <p class="cta-sub cta-note">This isn&rsquo;t a sales pitch. It&rsquo;s a feasibility check. We&rsquo;ll tell you if the move works or if you should wait.</p>
 
     <!-- 5. SOCIAL PROOF BAR
          RECO Bulletin 5.1: volume/activity claims must explain how they
@@ -689,13 +719,13 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
        back up. This is the last thing before the footer; do not let another
        content block get added below it. -->
   <div class="cta-repeat">
-    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Book Your Free Discovery Call</a>
+    <a class="cta cta-hero js-book" href="https://form.typeform.com/to/RBHYsHVT">Get Your Move Assessment</a>
   </div>
 </section>
 
 <!-- sticky booking bar, phones only, appears once past the hero -->
 <div class="stickybar" id="stickyBar" hidden>
-  <a class="cta js-book" href="https://form.typeform.com/to/RBHYsHVT">Book Your Free Discovery Call</a>
+  <a class="cta js-book" href="https://form.typeform.com/to/RBHYsHVT">Get Your Move Assessment</a>
 </div>
 
 <!-- ============================================================
@@ -884,8 +914,25 @@ h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
 
       // If the embed script never loaded, fall through to the plain link.
       if (!canPopup) return;
+      // Created at CLICK time deliberately: trackingFields() must read the
+      // _fbp/_fbc cookies fresh, after the pixel has had the whole page load
+      // to set them. Do not move this creation to page load; that reopens
+      // the cookie race the attribution commit closed.
+      if (!popup) {
+        try { popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration', hidden: trackingFields() }); }
+        catch (err) { popup = null; }
+      }
+      // If createPopup itself failed, fall through to the hosted form too,
+      // whose href applyFallbackHref just refreshed with the same fields.
+      // (A throw here used to land AFTER preventDefault, so the click died
+      // doing nothing - the worst outcome for the hottest visitor.)
+      if (!popup) return;
       e.preventDefault();
-      if (!popup) popup = window.tf.createPopup(FORM_ID, { size: 100, medium: 'vsl-registration', hidden: trackingFields() });
+      // Instant feedback on the button itself, ahead of Typeform's overlay:
+      // the click must visibly do something within 100ms. The class is
+      // removed on a timer; the overlay covers the page long before that.
+      a.classList.add('is-opening');
+      setTimeout(function () { a.classList.remove('is-opening'); }, 4000);
       popup.open();
     });
   });
